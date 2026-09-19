@@ -1,7 +1,8 @@
 using Microsoft.Extensions.Logging;
 using Models;
 using DbRepos;
-
+using Models.DTO;
+using Models.Interfaces;
 namespace Services;
 
 public class ReviewServiceDb: IReviewService
@@ -18,5 +19,8 @@ public class ReviewServiceDb: IReviewService
     _logger = logger;
     _repo = repo;
   }
+
+  public Task<ResponseItemDto<IReview>> ReadReviewAsync(Guid id, bool flat) => _repo.ReadReviewAsync(id, flat);
+  public Task<ResponseItemDto<IReview>> CreateReviewAsync(ReviewCUdto itemDto) => _repo.CreateReviewAsync(itemDto);
 
 }

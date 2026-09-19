@@ -22,5 +22,10 @@ public class AttractionServiceDb: IAttractionService
   }
 
   public Task<ResponsePageDto<IAttraction>> ReadAttractionsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize) => _repo.ReadAttractionsAsync(seeded, flat, filter, pageNumber, pageSize);
-
+  public Task<ResponseItemDto<IAttraction>> ReadAttractionAsync(Guid id, bool flat) => _repo.ReadAttractionAsync(id, flat);
+  public Task<ResponseItemDto<IAttraction>> CreateAttractionAsync(AttractionCuDto itemDto) => _repo.CreateAttractionAsync(itemDto);
+  public Task<ResponseItemDto<IAttraction>> UpdateAttractionAsync(AttractionCuDto itemDto) => _repo.UpdateAttractionAsync(itemDto);
+  public Task<ResponseItemDto<IAttraction>> DeleteAttractionAsync(Guid id) => _repo.DeleteAttractionAsync(id);
+  
+  
 }
