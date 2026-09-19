@@ -37,12 +37,12 @@ public class AttractionDbM : Attraction, ISeed<AttractionDbM>
   public List<ReviewDbM> ReviewsDbM {get; set;} = new();
   public AttractionDbM() {}
 
-  public AttractionDbM(AttractionCUdto dto): this()
+  public AttractionDbM(AttractionCuDto dto): this()
   {
     UpdateFromDTO(dto);
   }
 
-  public AttractionDbM UpdateFromDTO(AttractionCUdto org)
+  public AttractionDbM UpdateFromDTO(AttractionCuDto org)
   {
     if(org == null) return null;
 

@@ -3,25 +3,25 @@ using Models.Interfaces;
 
 namespace Models.DTO;
 
-public class AttractionCUdto
+public class AttractionCuDto
 {
   public Guid? AttractionId {get; set;}
   public bool Seeded {get; set;} = true;
   public string Name {get; set;}
-  public Guid CategoryId {get; set;}
+  public Guid? CategoryId {get; set;}
   public string Description {get; set;}
-  public Guid AddressId {get; set;}
-  public List<Guid> ReviewsId {get; set;} = new List<Guid>();
+  public Guid? AddressId {get; set;}
+  public List<Guid> ReviewsId {get; set;} = null;
 
-  public AttractionCUdto() {}
-  public AttractionCUdto(IAttraction model)
+  public AttractionCuDto() {}
+  public AttractionCuDto(IAttraction model)
   {
     this.AttractionId = model.AttractionId;
     this.Name = model.Name;
     this.Description = model.Description;
-    this.CategoryId = model.Category.CategoryId;
-    this.AddressId = model.Address.AddressId;
-    this.ReviewsId = model.Reviews.Select(r => r.ReviewId).ToList();
+    this.CategoryId = model?.Category?.CategoryId;
+    this.AddressId = model?.Address?.AddressId;
+    this.ReviewsId = model.Reviews?.Select(r => r.ReviewId).ToList();
   }
 }
 
@@ -49,7 +49,7 @@ public class UserCUdto
   public string FirstName {get; set;}
   public string LastName {get; set;}
   public string Email {get; set;}
-  public List<Guid> Reviews {get; set;} = new List<Guid>();
+  public List<Guid> ReviewsId {get; set;} = new List<Guid>();
 
   public UserCUdto() {}
 
@@ -59,6 +59,6 @@ public class UserCUdto
     FirstName = model.FirstName;
     LastName = model.LastName;
     Email = model.Email;
-    Reviews = model.Reviews.Select(r => r.ReviewId).ToList();
+    ReviewsId = model.Reviews.Select(r => r.ReviewId).ToList();
   }
 }
