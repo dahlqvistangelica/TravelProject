@@ -34,30 +34,29 @@ public interface IReview
   public string Comment {get; set;}
 }
 
-// public interface ICity
-// {
-//   public Guid CityId {get;set;}
-//   public ICountry Country {get;set;}
-//   public string Name {get; set;}
-//   public List<IAddress> Addresses {get; set;}
-// }
+public interface ICity
+{
+  public Guid CityId {get;set;}
+  public ICountry Country {get;set;}
+  public string Name {get; set;}
+  public List<IAddress> Addresses {get; set;}
+}
 
-// public interface ICountry
-//   {
-//     public Guid CountryId {get; set;}
+public interface ICountry
+  {
+    public Guid CountryId {get; set;}
 
-//     public string Name {get; set;}
-//     public string Description {get; set;}
-//     public List<ICity> Cities {get; set;}
+    public string Name {get; set;}
+    public List<ICity> Cities {get; set;}
 
-//   }
+  }
 
 public interface IAddress
 {
   public Guid AddressId {get; set;}
   public string Street {get; set;}
   public int ZipCode {get; set;}
-  public string City {get; set;}
-  public string Country {get; set;}
+  public ICity City {get; set;}
+  public ICountry Country {get; set;}
   public IAttraction Attraction {get; set;}
 }

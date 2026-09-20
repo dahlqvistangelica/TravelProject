@@ -19,8 +19,8 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
   public DbSet<ReviewDbM> Reviews { get; set; }
   public DbSet<UserDbM> Users { get; set; }
   public DbSet<AddressDbM> Addresses {get; set;}
-
-
+  public DbSet<CityDbM> Cities {get; set;}
+    public DbSet<CountryDbM> Countries {get; set;}
   public MainDbContext() {}
   public MainDbContext(DbContextOptions options) : base(options) {}
 

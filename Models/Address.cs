@@ -8,8 +8,8 @@ public class Address : IAddress, ISeed<Address>, IEquatable<Address>
   public virtual Guid AddressId {get; set;}
   public virtual string Street {get; set;}
   public virtual int ZipCode {get; set;}
-  public virtual string City {get; set;}
-  public virtual string Country {get; set;}
+  public virtual ICity City {get; set;}
+  public virtual ICountry Country {get; set;}
   public virtual bool Seeded {get; set;} = false;
   public virtual IAttraction Attraction {get; set;}
 
@@ -36,9 +36,9 @@ public class Address : IAddress, ISeed<Address>, IEquatable<Address>
   {
     Seeded = true;
     AddressId = Guid.NewGuid();
-    Country = seeder.Country;
-    City = seeder.City(Country);
-    Street = seeder.StreetAddress(Country);
+    Country.Name = seeder.Country;
+    City.Name = seeder.City(Country.Name);
+    Street = seeder.StreetAddress(Country.Name);
     ZipCode = seeder.ZipCode;
     
     return this;

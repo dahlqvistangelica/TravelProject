@@ -5,7 +5,9 @@ namespace Services;
 
 public interface IAdminService
 {
-  public Task SeedAsync(int seedCount);
+  public Task<ResponseItemDto<GstUsrInfoAllDto>> RobustSeedingAsync();
+  public Task<ResponseItemDto<GstUsrInfoAllDto>> DbInfoAsync();
+  public Task<ResponseItemDto<GstUsrInfoAllDto>> RemoveSeedAsync(bool seeded);
 }
 public interface IAttractionService
 {

@@ -16,10 +16,20 @@ public class AddressDbM : Address, ISeed<AddressDbM>, IEquatable<AddressDbM>
   public override string Street { get; set; }
   [Required]
   public override int ZipCode { get; set; }
-  [Required]
-  public override string City {get; set;}
-  [Required]
-  public override string Country {get; set;}
+  [JsonIgnore]
+  public Guid? CityId {get; set;}
+  [NotMapped]
+  public override ICity City {get; set;}
+  [JsonIgnore]
+  [ForeignKey("CityId")]
+  public CityDbM CityDbM {get; set;}
+  [JsonIgnore]
+  public Guid? CountryId {get; set;}
+  [NotMapped]
+  public override ICountry Country {get; set;}
+  [JsonIgnore]
+  [ForeignKey("CountryId")]
+  public CountryDbM CountryDbM {get; set;}
   #region Equatable implementation
   public bool Equals(AddressDbM other) => (other != null) && ((Street, ZipCode, City, Country) ==
         (other.Street, other.ZipCode, other.City, other.Country));

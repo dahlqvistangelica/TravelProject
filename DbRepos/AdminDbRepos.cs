@@ -27,7 +27,7 @@ public class AdminDbRepos
         _dbContext = context;
     }
     #endregion
-        private async Task<ResponseItemDto<GstUsrInfoAllDto>> DbInfo()
+        public async Task<ResponseItemDto<GstUsrInfoAllDto>> DbInfo()
     {
         var info = new GstUsrInfoAllDto();
         info.Db = new GstUsrInfoDbDto
@@ -59,21 +59,22 @@ public class AdminDbRepos
         };
     }
 
-   public async Task<ResponseItemDto<GstUsrInfoAllDto>> SeedAsync(int nrOfItems)
+   public async Task<ResponseItemDto<GstUsrInfoAllDto>> RobustSeedingAsync()
     {
 
         var fn = Path.GetFullPath(_seedSource);
         var seeder = new SeedGenerator(fn);
 
-        var categories = seeder.UniqueItemsToList<CategoryDbM>(nrOfItems);
-        var addresses = seeder.ItemsToList<AddressDbM>(nrOfItems);
-        var attractions = seeder.ItemsToList<AttractionDbM>(nrOfItems);
-        var users = seeder.ItemsToList<UserDbM>(nrOfItems);
+        var categories = seeder.UniqueItemsToList<CategoryDbM>(30);
+        var addresses = seeder.ItemsToList<AddressDbM>(100);
+        var attractions = seeder.ItemsToList<AttractionDbM>(1000);
+        var users = seeder.ItemsToList<UserDbM>(50);
+        var reviews = seeder.ItemsToList<ReviewDbM>(2000);
         foreach(var attraction in attractions)
         {
             attraction.CategoryDbM = seeder.FromList(categories);
             attraction.AddressDbM = seeder.FromList(addresses);
-            attraction.ReviewsDbM = seeder.ItemsToList<ReviewDbM>(seeder.Next(0,50));
+            attraction.ReviewsDbM = seeder.ItemsToList<ReviewDbM>(seeder.Next(0,20));
             foreach(var review in attraction.ReviewsDbM)
             {
                 review.UserDbM = seeder.FromList(users);
@@ -82,7 +83,6 @@ public class AdminDbRepos
 
         _dbContext.Attractions.AddRange(attractions);
         
-
         await _dbContext.SaveChangesAsync();
         return await DbInfo();
     }

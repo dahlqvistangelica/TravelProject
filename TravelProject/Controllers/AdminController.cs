@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Services;
 using Configuration;
 using Configuration.Options;
+using Models.DTO;
 namespace TravelProject.Controllers
 {
   [ApiController]
@@ -57,25 +58,6 @@ namespace TravelProject.Controllers
       }
     }
 
-    [HttpGet]
-    [ActionName("Seed")]
-    [ProducesResponseType(200, Type = typeof(string))]
-    [ProducesResponseType(400, Type = typeof(string))]
-    public async Task<IActionResult> Seed(int seedCount)
-    {
-      try
-        { 
-          _logger.LogInformation($"{nameof(Seed)}");
-          await _service.SeedAsync(seedCount);
-          return Ok($"Seeding {seedCount} items completed successfully.");
-        }
-      catch(Exception ex)
-      {
-        _logger.LogError($"{nameof(Seed)}: {ex.Message}");
-        return BadRequest(ex.Message);
-      }
-    }
-
     [HttpGet()]
     [ActionName("ConnectionString")]
     [ProducesResponseType(200, Type = typeof(string))]
@@ -92,6 +74,44 @@ namespace TravelProject.Controllers
             _logger.LogError($"{nameof(ConnectionString)}: {ex.Message}");
             return BadRequest(ex.Message);
         }
+    }
+    [HttpGet()]
+    [ActionName("RobustSeeding")]
+    [ProducesResponseType(200, Type = typeof(string))]
+    [ProducesResponseType(400, Type = typeof(string))]
+    public async Task<IActionResult> RobustSeeding()
+    {
+      try
+        { 
+          _logger.LogInformation($"{nameof(RobustSeeding)}");
+          var result = await _service.RobustSeedingAsync();
+          return Ok(result);
+        }
+      catch(Exception ex)
+      {
+        _logger.LogError($"{nameof(RobustSeeding)}: {ex.Message}");
+        return BadRequest(ex.Message);
+      }
+    }
+
+    [HttpGet()]
+    [ActionName("RemoveSeed")]
+    [ProducesResponseType(200, Type = typeof(GstUsrInfoAllDto))]
+    [ProducesResponseType(400, Type = typeof(string))]  
+    public async Task<IActionResult> RemoveSeed(string seeded="true")
+    {
+      try
+        {
+          bool seededArg = bool.Parse(seeded); 
+          _logger.LogInformation($"{nameof(RemoveSeed)}: {nameof(seededArg)}: {seededArg}");
+          var result = await _service.RemoveSeedAsync(seededArg);
+          return Ok(result);
+        }
+      catch(Exception ex)
+      {
+        _logger.LogError($"{nameof(RemoveSeed)}: {ex.Message}");
+        return BadRequest(ex.Message);
+      }
     }
 
     public AdminController(

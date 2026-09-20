@@ -77,4 +77,21 @@ public class UserCUdto
     Email = model.Email;
     ReviewsId = model.Reviews.Select(r => r.ReviewId).ToList();
   }
+
+  public void EnsureValidity()
+  {
+    if(!string.IsNullOrEmpty(FirstName) && Regex.IsMatch(FirstName,@"^[a-zA-ZåäöÅÄÖ\s-]*$"))
+    {
+        throw new ArgumentException($"User first name can only contain letters (a-z), spaces, and the following special characters: -");
+      }
+    if(!string.IsNullOrEmpty(LastName) && Regex.IsMatch(LastName,@"^[a-zA-ZåäöÅÄÖ\s-]*$"))
+    {
+        throw new ArgumentException($"User last name can only contain letters (a-z), spaces, and the following special characters: -");
+      }
+    if(!string.IsNullOrEmpty(Email) && !Regex.IsMatch(Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+    {
+        throw new ArgumentException($"User email must be a valid email address.");
+      }
+    }
+  
 }

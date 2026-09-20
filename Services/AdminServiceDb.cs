@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 
 using DbRepos;
+using Models.DTO;
 
 namespace Services;
     
@@ -9,8 +10,9 @@ public class AdminServiceDb : IAdminService
     private readonly AdminDbRepos _repo = null;
     private readonly ILogger<AdminServiceDb> _logger = null;
 
-    public Task SeedAsync(int nrItems) => _repo.SeedAsync(nrItems);
-
+    public Task<ResponseItemDto<GstUsrInfoAllDto>> RobustSeedingAsync() => _repo.RobustSeedingAsync();
+    public Task<ResponseItemDto<GstUsrInfoAllDto>> DbInfoAsync() => _repo.DbInfo();
+    public Task<ResponseItemDto<GstUsrInfoAllDto>> RemoveSeedAsync(bool seeded) => _repo.RemoveSeedAsync(seeded);
     #region constructors
     public AdminServiceDb(AdminDbRepos repo)
     {

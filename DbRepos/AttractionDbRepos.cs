@@ -43,14 +43,14 @@ public class AttractionDbRepos
             .Where(i => (i.Seeded == seeded) &&
                         (i.Name.ToLower().Contains(filter)) ||
                         (i.CategoryDbM.CategoryName.ToLower().Contains(filter)) ||
-                        (i.AddressDbM.City.ToLower().Contains(filter)) ||
-                        (i.AddressDbM.Country.ToLower().Contains(filter))).CountAsync(),
+                        (i.AddressDbM.City.Name.ToLower().Contains(filter)) ||
+                        (i.AddressDbM.Country.Name.ToLower().Contains(filter))).CountAsync(),
             PageItems = await query
                         .Where(i => (i.Seeded == seeded) &&
                         (i.Name.ToLower().Contains(filter)) ||
                         (i.CategoryDbM.CategoryName.ToLower().Contains(filter)) ||
-                        (i.AddressDbM.City.ToLower().Contains(filter)) ||
-                        (i.AddressDbM.Country.ToLower().Contains(filter)))
+                        (i.AddressDbM.City.Name.ToLower().Contains(filter)) ||
+                        (i.AddressDbM.Country.Name.ToLower().Contains(filter)))
                         
                         .Skip(pageNumber*pageSize)
                         .Take(pageSize)
@@ -83,9 +83,9 @@ public class AttractionDbRepos
             #endif
 
             DbItemsCount = await query
-            .Where(i => (i.Seeded == seeded) && (i.ReviewsDbM.Count>0)).CountAsync(),
+            .Where(i => (i.Seeded == seeded) && (i.ReviewsDbM.Count == 0)).CountAsync(),
             PageItems = await query
-            .Where(i => (i.Seeded == seeded) && (i.ReviewsDbM.Count>0))
+            .Where(i => (i.Seeded == seeded) && (i.ReviewsDbM.Count == 0))
             .Skip(pageNumber*pageSize)
             .Take(pageSize)
             .ToListAsync<IAttraction>(),
