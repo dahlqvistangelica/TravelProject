@@ -24,7 +24,10 @@ public class AddressDbRepos
         filter??= "";
         IQueryable<AddressDbM> query = flat ?
         _dbContext.Addresses.AsNoTracking()
-        : _dbContext.Addresses.AsNoTracking().Include(i => i.AttractionDbM);
+        : _dbContext.Addresses.AsNoTracking()
+            .Include(i => i.AttractionDbM)
+            .Include(i => i.CityDbM)
+            .ThenInclude(i => i.CountryDbM);
 
         var ret = new ResponsePageDto<IAddress>()
         {
@@ -33,11 +36,17 @@ public class AddressDbRepos
             #endif
 
             DbItemsCount = await query
-            .Where(i => (i.Seeded == seeded) && ((i.Street.ToLower().Contains(filter)) || (i.City.ToLower().Contains(filter)) || (i.Country.ToLower().Contains(filter))))
+            .Where(i => i.Seeded == seeded &&
+                        (i.Street.ToLower().Contains(filter) ||
+                         i.CityDbM.Name.ToLower().Contains(filter) ||
+                         i.CityDbM.CountryDbM.Name.ToLower().Contains(filter)))
             .CountAsync(),
 
             PageItems = await query
-            .Where(i => (i.Seeded == seeded) && ((i.Street.ToLower().Contains(filter)) || (i.City.ToLower().Contains(filter)) || (i.Country.ToLower().Contains(filter))))
+            .Where(i => i.Seeded == seeded &&
+                        (i.Street.ToLower().Contains(filter) ||
+                         i.CityDbM.Name.ToLower().Contains(filter) ||
+                         i.CityDbM.CountryDbM.Name.ToLower().Contains(filter)))
             .Skip(pageNumber * pageSize)
             .Take(pageSize)
             .ToListAsync<IAddress>(),

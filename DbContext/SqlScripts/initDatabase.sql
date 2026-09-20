@@ -43,7 +43,12 @@ CREATE OR ALTER PROC supusr.spDeleteAll
     SELECT @nrCategoriesAffected = COUNT(*) FROM supusr.Categories WHERE Seeded = @seededParam;
     SELECT @nrReviewsAffected = COUNT(*) FROM supusr.Reviews WHERE Seeded = @seededParam;
 
-    ;THROW 999999, 'Error occurred in supusr.spDeleteAll', 1
+    DELETE FROM supusr.Reviews WHERE Seeded = @seededParam;
+    DELETE FROM supusr.Users WHERE Seeded = @seededParam;
+    DELETE FROM supusr.Attractions WHERE Seeded = @seededParam;
+    DELETE FROM supusr.Addresses WHERE Seeded = @seededParam;
+    DELETE FROM supusr.Categories WHERE Seeded = @seededParam;
+    
 
     SELECT * FROM gstusr.vwInfoDb;
 GO

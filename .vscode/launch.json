@@ -1,0 +1,27 @@
+//launch-docker-all
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "TravelProject",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/TravelProject/bin/Debug/net10.0/TravelProject.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/TravelProject",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
+                "uriFormat": "%s/swagger"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        }
+    ]
+}

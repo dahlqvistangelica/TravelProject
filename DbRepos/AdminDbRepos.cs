@@ -64,23 +64,46 @@ public class AdminDbRepos
 
         var fn = Path.GetFullPath(_seedSource);
         var seeder = new SeedGenerator(fn);
-
+        var countries = seeder.UniqueItemsToList<CountryDbM>(4);
         var categories = seeder.UniqueItemsToList<CategoryDbM>(30);
-        var addresses = seeder.ItemsToList<AddressDbM>(100);
         var attractions = seeder.ItemsToList<AttractionDbM>(1000);
         var users = seeder.ItemsToList<UserDbM>(50);
-        var reviews = seeder.ItemsToList<ReviewDbM>(2000);
+        var addresses = new List<AddressDbM>();
+        foreach(var country in countries)
+        {
+            var countryCities = Enumerable.Range(0, 25)
+                .Select(_ => new CityDbM { CountryDbM = country }.Seed(seeder))
+                .ToList();
+            country.CitiesDbM = countryCities;
+            foreach(var city in countryCities)
+            {
+                var cityAddresses = Enumerable.Range(0, 50)
+                    .Select(_ => new AddressDbM
+                    {
+                        CityDbM = city,
+                    }.Seed(seeder))
+                    .ToList();
+                city.AddressesDbM = cityAddresses;
+                addresses.AddRange(cityAddresses);
+            }
+        }
         foreach(var attraction in attractions)
         {
             attraction.CategoryDbM = seeder.FromList(categories);
             attraction.AddressDbM = seeder.FromList(addresses);
-            attraction.ReviewsDbM = seeder.ItemsToList<ReviewDbM>(seeder.Next(0,20));
+            attraction.ReviewsDbM = seeder.ItemsToList<ReviewDbM>(seeder.Next(0, 21));
             foreach(var review in attraction.ReviewsDbM)
             {
                 review.UserDbM = seeder.FromList(users);
+                review.AttractionDbM = attraction;
             }
         }
 
+        _dbContext.Countries.AddRange(countries);
+        _dbContext.Cities.AddRange(countries.SelectMany(country => country.CitiesDbM));
+        _dbContext.Addresses.AddRange(addresses);
+        _dbContext.Categories.AddRange(categories);
+        _dbContext.Users.AddRange(users);
         _dbContext.Attractions.AddRange(attractions);
         
         await _dbContext.SaveChangesAsync();
@@ -98,7 +121,7 @@ public class AdminDbRepos
         parameters = new List<DbParameter>
         {
             new SqlParameter("seededParam", seeded),
-            new SqlParameter("nrAttrationsAffected", SqlDbType.Int) {Direction = ParameterDirection.Output},
+            new SqlParameter("nrAttractionsAffected", SqlDbType.Int) {Direction = ParameterDirection.Output},
             new SqlParameter("nrAddressesAffected", SqlDbType.Int) {Direction = ParameterDirection.Output},
             new SqlParameter("nrCategoriesAffected", SqlDbType.Int) {Direction = ParameterDirection.Output},
             new SqlParameter("nrReviewsAffected", SqlDbType.Int) {Direction = ParameterDirection.Output},
@@ -122,7 +145,7 @@ public class AdminDbRepos
             {
                 NrSeededAttractions = Convert.ToInt32(reader["NrSeededAttractions"]),
                 NrUnseededAttractions = Convert.ToInt32(reader["NrUnseededAttractions"]),
-                NrAttractionssWithAddress = Convert.ToInt32(reader["NrAttractionssWithAddress"]),
+                NrAttractionssWithAddress = Convert.ToInt32(reader["NrAttractionsWithAddress"]),
                 NrSeededAddresses = Convert.ToInt32(reader["NrSeededAddresses"]),
                 NrUnseededAddresses = Convert.ToInt32(reader["NrUnseededAddresses"]),
                 NrSeededCategories = Convert.ToInt32(reader["NrSeededCategories"]),

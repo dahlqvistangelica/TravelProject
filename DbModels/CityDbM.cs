@@ -8,7 +8,7 @@ using Seido.Utilities.SeedGenerator;
 
 namespace DbModels;
 [Table("Cities")]
-public class CityDbM : City, ISeed<CityDbM>
+public class CityDbM : City, ISeed<CityDbM>, IEquatable<CityDbM>
 {
     [Key]
     public override Guid CityId { get; set; }
@@ -25,7 +25,13 @@ public class CityDbM : City, ISeed<CityDbM>
     public override List<IAddress> Addresses {get => AddressesDbM.ToList<IAddress>(); set => throw new NotImplementedException();}
     [JsonIgnore]
     public List<AddressDbM> AddressesDbM {get; set;}
-    
+      #region IEquatable
+      public bool Equals(CityDbM other) => (other != null) && ((this.Name, this.Country) ==
+        (other.Name, other.Country));
+
+    public override bool Equals(object obj) => Equals(obj as CityDbM);
+    public override int GetHashCode() => (Name, Country).GetHashCode();
+    #endregion
     #region constructors
     public CityDbM() { }
     #endregion

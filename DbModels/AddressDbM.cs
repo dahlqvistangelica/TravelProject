@@ -19,23 +19,17 @@ public class AddressDbM : Address, ISeed<AddressDbM>, IEquatable<AddressDbM>
   [JsonIgnore]
   public Guid? CityId {get; set;}
   [NotMapped]
-  public override ICity City {get; set;}
+  public override ICity City {get => CityDbM; set => throw new NotImplementedException();}
   [JsonIgnore]
   [ForeignKey("CityId")]
   public CityDbM CityDbM {get; set;}
-  [JsonIgnore]
-  public Guid? CountryId {get; set;}
-  [NotMapped]
-  public override ICountry Country {get; set;}
-  [JsonIgnore]
-  [ForeignKey("CountryId")]
-  public CountryDbM CountryDbM {get; set;}
+  
   #region Equatable implementation
-  public bool Equals(AddressDbM other) => (other != null) && ((Street, ZipCode, City, Country) ==
-        (other.Street, other.ZipCode, other.City, other.Country));
+  public bool Equals(AddressDbM other) => (other != null) && ((Street, ZipCode, City) ==
+        (other.Street, other.ZipCode, other.City));
 
   public override bool Equals(object obj) => Equals(obj as AddressDbM);
-  public override int GetHashCode() => (Street, ZipCode, City, Country).GetHashCode();
+  public override int GetHashCode() => (Street, ZipCode, City).GetHashCode();
   #endregion
   [JsonIgnore]
   public Guid? AttractionId {get; set;}

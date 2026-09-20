@@ -57,6 +57,5 @@ public interface IAddress
   public string Street {get; set;}
   public int ZipCode {get; set;}
   public ICity City {get; set;}
-  public ICountry Country {get; set;}
   public IAttraction Attraction {get; set;}
 }

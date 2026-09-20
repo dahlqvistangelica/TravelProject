@@ -11,8 +11,12 @@ namespace DbContext.Migrations.SqlServerDbContext
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "supusr");
+
             migrationBuilder.CreateTable(
                 name: "Categories",
+                schema: "supusr",
                 columns: table => new
                 {
                     CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -25,7 +29,21 @@ namespace DbContext.Migrations.SqlServerDbContext
                 });
 
             migrationBuilder.CreateTable(
+                name: "Countries",
+                columns: table => new
+                {
+                    CountryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "varchar(200)", nullable: true),
+                    Seeded = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Countries", x => x.CountryId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
+                schema: "supusr",
                 columns: table => new
                 {
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -40,24 +58,49 @@ namespace DbContext.Migrations.SqlServerDbContext
                 });
 
             migrationBuilder.CreateTable(
+                name: "Cities",
+                columns: table => new
+                {
+                    CityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "varchar(200)", nullable: true),
+                    CountryId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Seeded = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cities", x => x.CityId);
+                    table.ForeignKey(
+                        name: "FK_Cities_Countries_CountryId",
+                        column: x => x.CountryId,
+                        principalTable: "Countries",
+                        principalColumn: "CountryId");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Addresses",
+                schema: "supusr",
                 columns: table => new
                 {
                     AddressId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Street = table.Column<string>(type: "varchar(200)", nullable: false),
                     ZipCode = table.Column<int>(type: "int", nullable: false),
-                    City = table.Column<string>(type: "varchar(200)", nullable: false),
-                    Country = table.Column<string>(type: "varchar(200)", nullable: false),
+                    CityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     AttractionId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Seeded = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Addresses", x => x.AddressId);
+                    table.ForeignKey(
+                        name: "FK_Addresses_Cities_CityId",
+                        column: x => x.CityId,
+                        principalTable: "Cities",
+                        principalColumn: "CityId");
                 });
 
             migrationBuilder.CreateTable(
                 name: "Attractions",
+                schema: "supusr",
                 columns: table => new
                 {
                     AttractionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -73,17 +116,20 @@ namespace DbContext.Migrations.SqlServerDbContext
                     table.ForeignKey(
                         name: "FK_Attractions_Addresses_AddressId",
                         column: x => x.AddressId,
+                        principalSchema: "supusr",
                         principalTable: "Addresses",
                         principalColumn: "AddressId");
                     table.ForeignKey(
                         name: "FK_Attractions_Categories_CategoryId",
                         column: x => x.CategoryId,
+                        principalSchema: "supusr",
                         principalTable: "Categories",
                         principalColumn: "CategoryId");
                 });
 
             migrationBuilder.CreateTable(
                 name: "Reviews",
+                schema: "supusr",
                 columns: table => new
                 {
                     ReviewId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -98,44 +144,64 @@ namespace DbContext.Migrations.SqlServerDbContext
                     table.ForeignKey(
                         name: "FK_Reviews_Attractions_AttractionId",
                         column: x => x.AttractionId,
+                        principalSchema: "supusr",
                         principalTable: "Attractions",
                         principalColumn: "AttractionId");
                     table.ForeignKey(
                         name: "FK_Reviews_Users_UserId",
                         column: x => x.UserId,
+                        principalSchema: "supusr",
                         principalTable: "Users",
                         principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Addresses_AttractionId",
+                schema: "supusr",
                 table: "Addresses",
                 column: "AttractionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Addresses_CityId",
+                schema: "supusr",
+                table: "Addresses",
+                column: "CityId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Attractions_AddressId",
+                schema: "supusr",
                 table: "Attractions",
                 column: "AddressId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Attractions_CategoryId",
+                schema: "supusr",
                 table: "Attractions",
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Cities_CountryId",
+                table: "Cities",
+                column: "CountryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Reviews_AttractionId",
+                schema: "supusr",
                 table: "Reviews",
                 column: "AttractionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reviews_UserId",
+                schema: "supusr",
                 table: "Reviews",
                 column: "UserId");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Addresses_Attractions_AttractionId",
+                schema: "supusr",
                 table: "Addresses",
                 column: "AttractionId",
+                principalSchema: "supusr",
                 principalTable: "Attractions",
                 principalColumn: "AttractionId");
         }
@@ -145,22 +211,34 @@ namespace DbContext.Migrations.SqlServerDbContext
         {
             migrationBuilder.DropForeignKey(
                 name: "FK_Addresses_Attractions_AttractionId",
+                schema: "supusr",
                 table: "Addresses");
 
             migrationBuilder.DropTable(
-                name: "Reviews");
+                name: "Reviews",
+                schema: "supusr");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Users",
+                schema: "supusr");
 
             migrationBuilder.DropTable(
-                name: "Attractions");
+                name: "Attractions",
+                schema: "supusr");
 
             migrationBuilder.DropTable(
-                name: "Addresses");
+                name: "Addresses",
+                schema: "supusr");
 
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "Categories",
+                schema: "supusr");
+
+            migrationBuilder.DropTable(
+                name: "Cities");
+
+            migrationBuilder.DropTable(
+                name: "Countries");
         }
     }
 }

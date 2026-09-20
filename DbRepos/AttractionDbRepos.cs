@@ -30,6 +30,8 @@ public class AttractionDbRepos
         {
             query = _dbContext.Attractions.AsNoTracking()
                     .Include(i => i.AddressDbM)
+                    .ThenInclude(i => i.CityDbM)
+                    .ThenInclude(i => i.CountryDbM)
                     .Include(i => i.CategoryDbM)
                     .Include(i => i.ReviewsDbM);
         }
@@ -40,17 +42,18 @@ public class AttractionDbRepos
             #endif
 
             DbItemsCount = await query
-            .Where(i => (i.Seeded == seeded) &&
-                        (i.Name.ToLower().Contains(filter)) ||
-                        (i.CategoryDbM.CategoryName.ToLower().Contains(filter)) ||
-                        (i.AddressDbM.City.Name.ToLower().Contains(filter)) ||
-                        (i.AddressDbM.Country.Name.ToLower().Contains(filter))).CountAsync(),
+            .Where(i => i.Seeded == seeded &&
+                        (i.Name.ToLower().Contains(filter) ||
+                         i.CategoryDbM.CategoryName.ToLower().Contains(filter) ||
+                         i.AddressDbM.CityDbM.Name.ToLower().Contains(filter) ||
+                         i.AddressDbM.CityDbM.CountryDbM.Name.ToLower().Contains(filter)))
+                        .CountAsync(),
             PageItems = await query
-                        .Where(i => (i.Seeded == seeded) &&
-                        (i.Name.ToLower().Contains(filter)) ||
-                        (i.CategoryDbM.CategoryName.ToLower().Contains(filter)) ||
-                        (i.AddressDbM.City.Name.ToLower().Contains(filter)) ||
-                        (i.AddressDbM.Country.Name.ToLower().Contains(filter)))
+                        .Where(i => i.Seeded == seeded &&
+                        (i.Name.ToLower().Contains(filter) ||
+                         i.CategoryDbM.CategoryName.ToLower().Contains(filter) ||
+                         i.AddressDbM.CityDbM.Name.ToLower().Contains(filter) ||
+                         i.AddressDbM.CityDbM.CountryDbM.Name.ToLower().Contains(filter)))
                         
                         .Skip(pageNumber*pageSize)
                         .Take(pageSize)

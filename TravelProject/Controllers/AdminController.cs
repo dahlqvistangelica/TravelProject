@@ -57,24 +57,6 @@ namespace TravelProject.Controllers
         return BadRequest(ex.Message);
       }
     }
-
-    [HttpGet()]
-    [ActionName("ConnectionString")]
-    [ProducesResponseType(200, Type = typeof(string))]
-    public IActionResult ConnectionString()
-    {
-        try
-        {
-            var connectionString = _configuration.GetConnectionString("SqlServerDocker");
-            _logger.LogInformation($"{nameof(ConnectionString)}:\n{JsonConvert.SerializeObject(connectionString)}");
-            return Ok(connectionString);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError($"{nameof(ConnectionString)}: {ex.Message}");
-            return BadRequest(ex.Message);
-        }
-    }
     [HttpGet()]
     [ActionName("RobustSeeding")]
     [ProducesResponseType(200, Type = typeof(string))]
@@ -89,7 +71,7 @@ namespace TravelProject.Controllers
         }
       catch(Exception ex)
       {
-        _logger.LogError($"{nameof(RobustSeeding)}: {ex.Message}");
+        _logger.LogError(ex, nameof(RobustSeeding));
         return BadRequest(ex.Message);
       }
     }

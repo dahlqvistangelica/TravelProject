@@ -8,16 +8,24 @@ using Seido.Utilities.SeedGenerator;
 
 namespace DbModels;
 [Table("Countries")]
-public class CountryDbM : Country, ISeed<CountryDbM>
+public class CountryDbM : Country, ISeed<CountryDbM>, IEquatable<CountryDbM>
 {
     [Key]
     public override Guid CountryId { get; set; }
  
     public override string Name {get; set; }
+    
     [NotMapped]
     public override List<ICity> Cities {get => CitiesDbM.ToList<ICity>(); set => throw new NotImplementedException(); }
     [JsonIgnore]
     public List<CityDbM> CitiesDbM {get; set;}
+      #region IEquatable
+      public bool Equals(CountryDbM other) => (other != null) && ((this.Name) ==
+        (other.Name));
+
+    public override bool Equals(object obj) => Equals(obj as CountryDbM);
+    public override int GetHashCode() => (Name).GetHashCode();
+    #endregion
     
     #region constructors
     public CountryDbM() { }
