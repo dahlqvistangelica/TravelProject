@@ -109,15 +109,16 @@ namespace TravelProject.Controllers;
   [ProducesResponseType(200, Type = typeof(AttractionCuDto))]
   [ProducesResponseType(400, Type = typeof(string))]
   [ProducesResponseType(404, Type = typeof(string))]
-  public async Task<IActionResult> ReadAttractionDto(string id = null)
+  public async Task<IActionResult> ReadAttractionDto(string id = null, string flat = "false")
   {
     try
     {
       var idArg = Guid.Parse(id);
+      var flatArg = bool.Parse(flat);
 
       _logger.LogInformation($"{nameof(ReadAttractionDto)}: {nameof(idArg)}: {idArg}");
       
-      var attraction   = await _service.ReadAttractionAsync(idArg, true);
+      var attraction = await _service.ReadAttractionAsync(idArg, flatArg);
       if(attraction == null)
       {
         throw new ArgumentException($"Attraction with id {idArg} not found.");

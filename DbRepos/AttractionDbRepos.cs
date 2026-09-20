@@ -31,8 +31,6 @@ public class AttractionDbRepos
             query = _dbContext.Attractions.AsNoTracking()
                     .Include(i => i.AddressDbM)
                     .ThenInclude(i => i.CityDbM)
-                    .ThenInclude(i => i.CountryDbM)
-                    .Include(i => i.CategoryDbM)
                     .Include(i => i.ReviewsDbM);
         }
         var ret = new ResponsePageDto<IAttraction>()
@@ -108,6 +106,7 @@ public class AttractionDbRepos
             .Include(i => i.ReviewsDbM)
             .ThenInclude(i => i.UserDbM)
             .Include(i => i.AddressDbM)
+            .ThenInclude(i => i.CityDbM)
             .Include(i => i.CategoryDbM)
             .Where(i => i.AttractionId == id);
 
@@ -173,8 +172,6 @@ public class AttractionDbRepos
         {
             throw new ArgumentException($"Attraction with id {itemDto.AttractionId} not found");
         }
-
-
 
         item.UpdateFromDTO(itemDto);
 

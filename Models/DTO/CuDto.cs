@@ -25,11 +25,11 @@ public class AttractionCuDto
   }
   public void EnsureValidity()
   {
-    if(!string.IsNullOrEmpty(Name) && Regex.IsMatch(Name,@"^[a-zA-Z0-9åäöÅÄÖ\s-,./]*$"))
+    if(!string.IsNullOrEmpty(Name) && !Regex.IsMatch(Name,@"^[a-zA-Z0-9åäöÅÄÖ\s-,./]*$"))
     {
         throw new ArgumentException($"Attraction name can only contain letters (a-z), numbers (0-9), spaces, and the following special characters: - , . /");
       }
-    if(!string.IsNullOrEmpty(Description) && Regex.IsMatch(Description,@"^[a-zA-Z0-9åäöÅÄÖ\s-,./]*$"))
+    if(!string.IsNullOrEmpty(Description) && !Regex.IsMatch(Description,@"^[a-zA-Z0-9åäöÅÄÖ\s-,./]*$"))
     {
         throw new ArgumentException($"Attraction description can only contain letters (a-z), numbers (0-9), spaces, and the following special characters: - , . /");
       }
@@ -80,11 +80,11 @@ public class UserCUdto
 
   public void EnsureValidity()
   {
-    if(!string.IsNullOrEmpty(FirstName) && Regex.IsMatch(FirstName,@"^[a-zA-ZåäöÅÄÖ\s-]*$"))
+    if(!string.IsNullOrEmpty(FirstName) && !Regex.IsMatch(FirstName,@"^[a-zA-ZåäöÅÄÖ\s-]*$"))
     {
         throw new ArgumentException($"User first name can only contain letters (a-z), spaces, and the following special characters: -");
       }
-    if(!string.IsNullOrEmpty(LastName) && Regex.IsMatch(LastName,@"^[a-zA-ZåäöÅÄÖ\s-]*$"))
+    if(!string.IsNullOrEmpty(LastName) && !Regex.IsMatch(LastName,@"^[a-zA-ZåäöÅÄÖ\s-]*$"))
     {
         throw new ArgumentException($"User last name can only contain letters (a-z), spaces, and the following special characters: -");
       }
