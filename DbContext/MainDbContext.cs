@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Configuration;
 
 using DbModels;
+using Models.DTO;
+using DbContext.Extensions;
 
 namespace DbContext;
 
@@ -20,29 +22,26 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
   public DbSet<UserDbM> Users { get; set; }
   public DbSet<AddressDbM> Addresses {get; set;}
   public DbSet<CityDbM> Cities {get; set;}
-    public DbSet<CountryDbM> Countries {get; set;}
+  public DbSet<CountryDbM> Countries {get; set;}
+  #region constructors
   public MainDbContext() {}
   public MainDbContext(DbContextOptions options) : base(options) {}
-
+#endregion
+#region Db-Views
+public DbSet<GstUsrInfoDbDto> InfoDbView {get; set;}
+public DbSet<GstUsrInfoAttractionsDto> InfoAttractionsView {get; set;}
+public DbSet<GstUsrInfoUsersDto> InfoUsersView {get; set;}
+public DbSet<GstUsrInfoCitiesDto> InfoCitiesView {get; set;}
+#endregion
   protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        
+        modelBuilder.Entity<GstUsrInfoDbDto>().ToView("vwInfoDb", "gstusr").HasNoKey();
+        modelBuilder.Entity<GstUsrInfoAttractionsDto>().ToView("vwInfoAttractions", "gstusr").HasNoKey();
+        modelBuilder.Entity<GstUsrInfoUsersDto>().ToView("vwInfoUsers", "gstusr").HasNoKey();
+        modelBuilder.Entity<GstUsrInfoCitiesDto>().ToView("vwInfoCities", "gstusr").HasNoKey();
         base.OnModelCreating(modelBuilder);
     }
 
-   // Reads the connection string at design time (during migrations)
-    // because the DI container is not available when running `dotnet ef` commands
-    protected string GetConnectionString(string connectionStringName)
-    {
-        var config = new ConfigurationBuilder()
-            .SetBasePath(System.IO.Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .Build();
-
-        var connectionString = config.GetConnectionString(connectionStringName);
-        System.Console.WriteLine($"Design time connection string: {connectionString}");
-        return connectionString;
-    }
 
     #region Per-database sub-contexts used only for EF migrations
 
@@ -53,10 +52,10 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
+                        if (!optionsBuilder.IsConfigured)
             {
-                var cs = GetConnectionString("SqlServerDocker");
-                optionsBuilder.UseSqlServer(cs, o => o.EnableRetryOnFailure());
+                optionsBuilder = optionsBuilder.ConfigureForDesignTime(
+                    (options, connectionString) => options.UseSqlServer(connectionString, options => options.EnableRetryOnFailure()));
             }
             base.OnConfiguring(optionsBuilder);
         }
@@ -71,53 +70,6 @@ public class MainDbContext : Microsoft.EntityFrameworkCore.DbContext
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-        }
-    }
-
-    public class MySqlDbContext : MainDbContext
-    {
-        public MySqlDbContext() { }
-        public MySqlDbContext(DbContextOptions options) : base(options) { }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                var cs = GetConnectionString("MySqlDocker");
-                optionsBuilder.UseMySql(cs, ServerVersion.AutoDetect(cs),
-                    b => b.SchemaBehavior(
-                        Microting.EntityFrameworkCore.MySql.Infrastructure.MySqlSchemaBehavior.Translate,
-                        (schema, table) => $"{schema}_{table}"));
-            }
-            base.OnConfiguring(optionsBuilder);
-        }
-
-        protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
-        {
-            configurationBuilder.Properties<string>().HaveColumnType("varchar(200)");
-            base.ConfigureConventions(configurationBuilder);
-        }
-    }
-
-    public class PostgresDbContext : MainDbContext
-    {
-        public PostgresDbContext() { }
-        public PostgresDbContext(DbContextOptions options) : base(options) { }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                var cs = GetConnectionString("PostgreSqlDocker");
-                optionsBuilder.UseNpgsql(cs);
-            }
-            base.OnConfiguring(optionsBuilder);
-        }
-
-        protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
-        {
-            configurationBuilder.Properties<string>().HaveColumnType("varchar(200)");
-            base.ConfigureConventions(configurationBuilder);
         }
     }
     #endregion

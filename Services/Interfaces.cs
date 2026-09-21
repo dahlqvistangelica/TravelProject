@@ -11,8 +11,9 @@ public interface IAdminService
 }
 public interface IAttractionService
 {
-  public Task<ResponsePageDto<IAttraction>> ReadAttractionsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize);
+  public Task<ResponsePageDto<IAttraction>> ReadAttractionsAsync(bool seeded, bool flat, string filterName, string filterDesc, string filterPlace, string filterCat, int pageNumber, int pageSize);
   public Task<ResponseItemDto<IAttraction>> ReadAttractionAsync(Guid id, bool flat);
+  public Task<ResponsePageDto<IAttraction>> AttractionsWithoutReviewsAsync(bool seeded, bool flat, int pageNumber, int pageSize);
   public Task<ResponseItemDto<IAttraction>> CreateAttractionAsync(AttractionCuDto itemDto);
   public Task<ResponseItemDto<IAttraction>> UpdateAttractionAsync(AttractionCuDto itemDto);
   public Task<ResponseItemDto<IAttraction>> DeleteAttractionAsync(Guid id);
@@ -29,5 +30,5 @@ public interface IReviewService
 {
   public Task<ResponseItemDto<IReview>> ReadReviewAsync(Guid id, bool flat);
   public Task<ResponseItemDto<IReview>> CreateReviewAsync(ReviewCUdto itemDto);
-  
+  public Task<ResponseItemDto<IReview>> DeleteReviewAsync(Guid id);
 }

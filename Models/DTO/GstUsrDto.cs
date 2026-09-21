@@ -23,7 +23,7 @@ public class GstUsrInfoAttractionsDto
     public string Country { get; set; } = null;
     public string City { get; set; } = null;
     public string Category {get; set;} = null;
-    public int NrAttrations { get; set; } = 0;
+    public int NrAttractions { get; set; } = 0;
 }
 
 public class GstUsrInfoUsersDto
@@ -33,11 +33,10 @@ public class GstUsrInfoUsersDto
     public int NrUsers { get; set; } = 0;
 }
 
-public class GstUsrInfoReviewsDto
+public class GstUsrInfoCitiesDto
 {
     public string Country { get; set; } = null;
-    public string Attraction {get; set;} = null;
-    public int NrReviews { get; set; } = 0;
+    public int NrCities { get; set; } = 0;
 }
 
 public class GstUsrInfoAllDto
@@ -45,6 +44,6 @@ public class GstUsrInfoAllDto
     public GstUsrInfoDbDto Db { get; set; } = null;
     public List<GstUsrInfoAttractionsDto> Attractions { get; set; } = null;
     public List<GstUsrInfoUsersDto> Users { get; set; } = null;
-    public List<GstUsrInfoReviewsDto> Reviews { get; set; } = null;
+    public List<GstUsrInfoCitiesDto> Cities { get; set; } = null;
 }
 

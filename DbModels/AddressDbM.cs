@@ -17,7 +17,7 @@ public class AddressDbM : Address, ISeed<AddressDbM>, IEquatable<AddressDbM>
   [Required]
   public override int ZipCode { get; set; }
   [JsonIgnore]
-  public Guid? CityId {get; set;}
+  public Guid CityId {get; set;}
   [NotMapped]
   public override ICity City {get => CityDbM; set => throw new NotImplementedException();}
   [JsonIgnore]

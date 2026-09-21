@@ -14,20 +14,20 @@ public class ReviewDbM : Review, ISeed<ReviewDbM>, IEquatable<ReviewDbM>
     [Key]
     public override Guid ReviewId { get; set; }
     [JsonIgnore]
-    public Guid? UserId {get; set;}
+    public Guid UserId {get; set;}
     [NotMapped]
     public override IUser User {get => UserDbM; set => throw new NotImplementedException(); }
     [JsonIgnore]
     [ForeignKey("UserId")]
     public UserDbM UserDbM {get; set;} = null;
     [JsonIgnore]
-    public Guid? AttractionId {get; set;}
+    public Guid AttractionId {get; set;}
     [NotMapped]
     public override IAttraction Attraction {get => AttractionDbM; set => throw new NotImplementedException();}
     [JsonIgnore]
     [ForeignKey("AttractionId")]
     public AttractionDbM AttractionDbM {get; set;} = null;
-      [Column(TypeName = "varchar(max)")]
+    [Column(TypeName = "varchar(max)")]
     public override string Comment {get; set;}
 
       #region Equatable implementation

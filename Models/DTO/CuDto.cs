@@ -57,6 +57,14 @@ public class ReviewCUdto
     AttractionId = model.Attraction.AttractionId;
     Comment = model.Comment;
   }
+
+    public void EnsureValidity()
+  {
+    if(!string.IsNullOrEmpty(Comment) && !Regex.IsMatch(Comment,@"^[a-zA-ZåäöÅÄÖ\s-]*$"))
+    {
+        throw new ArgumentException($"Comment can only contain letters (a-ö), spaces, and the following special characters: -");
+      }
+    }
 }
 
 public class UserCUdto

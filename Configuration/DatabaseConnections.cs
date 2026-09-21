@@ -24,9 +24,6 @@ public class DatabaseConnections
         DataConnectionServer = _activeDataSet.DbServer.Trim().ToLower() switch
         {
             "sqlserver"  => DatabaseServer.SQLServer,
-            "mysql"      => DatabaseServer.MySql,
-            "postgresql" => DatabaseServer.PostgreSql,
-            "sqlite"     => DatabaseServer.SQLite,
             _ => throw new NotSupportedException($"DbServer {_activeDataSet.DbServer} not supported")
         },
   };

@@ -18,9 +18,12 @@ public class AttractionDbRepos
         _dbContext = context;
     }
 
-    public async Task<ResponsePageDto<IAttraction>> ReadAttractionsAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize)
+    public async Task<ResponsePageDto<IAttraction>> ReadAttractionsAsync(bool seeded, bool flat, string filterName, string filterDesc, string filterPlace, string filterCat, int pageNumber, int pageSize)
     {
-        filter ??= "";
+        filterDesc ??= "";
+        filterName ??= "";
+        filterPlace ??= "";
+        filterCat ??= "";
         IQueryable<AttractionDbM> query;
         if(flat)
         {
@@ -41,17 +44,19 @@ public class AttractionDbRepos
 
             DbItemsCount = await query
             .Where(i => i.Seeded == seeded &&
-                        (i.Name.ToLower().Contains(filter) ||
-                         i.CategoryDbM.CategoryName.ToLower().Contains(filter) ||
-                         i.AddressDbM.CityDbM.Name.ToLower().Contains(filter) ||
-                         i.AddressDbM.CityDbM.CountryDbM.Name.ToLower().Contains(filter)))
+                        (i.Name.ToLower().Contains(filterName) ||
+                         i.CategoryDbM.CategoryName.ToLower().Contains(filterCat) ||
+                         i.AddressDbM.CityDbM.Name.ToLower().Contains(filterPlace) ||
+                         i.AddressDbM.CityDbM.CountryDbM.Name.ToLower().Contains(filterPlace) || 
+                         i.Description.ToLower().Contains(filterDesc)) )
                         .CountAsync(),
             PageItems = await query
                         .Where(i => i.Seeded == seeded &&
-                        (i.Name.ToLower().Contains(filter) ||
-                         i.CategoryDbM.CategoryName.ToLower().Contains(filter) ||
-                         i.AddressDbM.CityDbM.Name.ToLower().Contains(filter) ||
-                         i.AddressDbM.CityDbM.CountryDbM.Name.ToLower().Contains(filter)))
+                        (i.Name.ToLower().Contains(filterName) ||
+                         i.CategoryDbM.CategoryName.ToLower().Contains(filterCat) ||
+                         i.AddressDbM.CityDbM.Name.ToLower().Contains(filterPlace) ||
+                         i.AddressDbM.CityDbM.CountryDbM.Name.ToLower().Contains(filterPlace) || 
+                         i.Description.ToLower().Contains(filterDesc)) )
                         
                         .Skip(pageNumber*pageSize)
                         .Take(pageSize)
@@ -62,7 +67,7 @@ public class AttractionDbRepos
         };
         return ret;
     }
-    public async Task<ResponsePageDto<IAttraction>> ReadAttractionsWithoutComments(bool seeded, bool flat, int pageNumber, int pageSize)
+    public async Task<ResponsePageDto<IAttraction>> ReadAttractionsWithoutReviewsAsync(bool seeded, bool flat, int pageNumber, int pageSize)
     {
         IQueryable<AttractionDbM> query;
         if(flat)

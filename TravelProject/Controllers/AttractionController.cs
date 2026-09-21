@@ -25,10 +25,11 @@ namespace TravelProject.Controllers;
   #endregion
 
   [HttpGet()]
-  [ActionName("Read")]
+  [ActionName("ReadAllAttractions")]
   [ProducesResponseType(200, Type = typeof(ResponsePageDto<IAttraction>))]
   [ProducesResponseType(400, Type = typeof(string))]
-  public async Task<IActionResult> Read(string seeded = "true", string flat = "true", string filter = null, string pageNr = "0", string pageSize = "10")
+  [ProducesResponseType(404, Type = typeof(string))]
+  public async Task<IActionResult> ReadAttractions(string seeded = "true", string flat = "true", string filterName = null, string filterDesc = null, string filterPlace = null, string filterCat = null, string pageNr = "0", string pageSize = "10")
   {
     try
     {
@@ -37,18 +38,30 @@ namespace TravelProject.Controllers;
       int pageNrArg = int.Parse(pageNr);
       int pageSizeArg = int.Parse(pageSize);
 
-      if(!string.IsNullOrEmpty(filter) && !Regex.IsMatch(filter, @"^[a-zA-Z0-9\s]*$"))
+      if(!string.IsNullOrEmpty(filterName) && !Regex.IsMatch(filterName, @"^[a-zA-Z0-9\s]*$"))
       {
-        throw new ArgumentException($"Filter can only contain letters (a-z), numbers (0-9), and spaces.");
+        throw new ArgumentException($"Name can only contain letters (a-z), numbers (0-9), and spaces.");
       }
-      _logger.LogInformation($"{nameof(Read)}: {nameof(seededArg)}: {seededArg}, {nameof(flatArg)}: {flatArg}, " +
+      if(!string.IsNullOrEmpty(filterDesc) && !Regex.IsMatch(filterDesc, @"^[a-zA-Z0-9\s]*$"))
+      {
+        throw new ArgumentException($"Description can only contain letters (a-z), numbers (0-9), and spaces.");
+      }
+      if(!string.IsNullOrEmpty(filterPlace) && !Regex.IsMatch(filterPlace, @"^[a-zA-Z0-9\s]*$"))
+      {
+        throw new ArgumentException($"Place can only contain letters (a-z), numbers (0-9), and spaces.");
+      }
+      if(!string.IsNullOrEmpty(filterCat) && !Regex.IsMatch(filterCat, @"^[a-zA-Z0-9\s]*$"))
+      {
+        throw new ArgumentException($"Category can only contain letters (a-z), numbers (0-9), and spaces.");
+      }
+      _logger.LogInformation($"{nameof(ReadAttractions)}: {nameof(seededArg)}: {seededArg}, {nameof(flatArg)}: {flatArg}, " +
                             $"{nameof(pageNrArg)}: {pageNrArg}, {nameof(pageSizeArg)}: {pageSizeArg}");
-      var resp = await _service.ReadAttractionsAsync(seededArg, flatArg, filter?.Trim().ToLower(), pageNrArg, pageSizeArg);
+      var resp = await _service.ReadAttractionsAsync(seededArg, flatArg, filterName, filterDesc, filterPlace, filterCat, pageNrArg, pageSizeArg);
       return Ok(resp);
     }
     catch(Exception ex)
     {
-      _logger.LogError($"{nameof(Read)}: {ex.Message}");
+      _logger.LogError($"{nameof(ReadAttractions)}: {ex.Message}");
       return BadRequest(ex.Message);
     }
   }
@@ -79,6 +92,33 @@ namespace TravelProject.Controllers;
     }
   }
 
+  [HttpGet()]
+  [ActionName("ReadAttractionsWithoutReviews")]
+  [ProducesResponseType(200, Type = typeof(ResponsePageDto<IAttraction>))]
+  [ProducesResponseType(400, Type = typeof(string))]
+  public async Task<IActionResult> ReadAttractionsWithoutReviews(string seeded = "true", string flat = "true", string pageNr = "0", string pageSize = "10")
+  {
+    try
+    {
+      var seededArg = bool.Parse(seeded);
+      var flatArg = bool.Parse(flat);
+      var pageNrArg = int.Parse(pageNr);
+      var pageSizeArg = int.Parse(pageSize);
+
+      _logger.LogInformation($"{nameof(ReadAttractionsWithoutReviews)}: {nameof(seededArg)}: {seededArg}, {nameof(flatArg)}: {flatArg}, " +
+                            $"{nameof(pageNrArg)}: {pageNrArg}, {nameof(pageSizeArg)}: {pageSizeArg}");
+
+      var resp = await _service.AttractionsWithoutReviewsAsync(seededArg, flatArg, pageNrArg, pageSizeArg);
+      return Ok(resp);
+    }
+    catch(Exception ex)
+    {
+      _logger.LogError($"{nameof(ReadAttractionsWithoutReviews)}: {ex.Message}");
+      return BadRequest(ex.Message);
+    }
+  }
+
+  [HttpGet()]
   [HttpDelete()]
   [ActionName("DeleteAttraction")]
   [ProducesResponseType(200, Type = typeof(IAttraction))]

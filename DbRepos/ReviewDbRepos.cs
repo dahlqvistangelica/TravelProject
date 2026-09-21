@@ -73,6 +73,30 @@ public class ReviewDbRepos
 
     }
 
+    public async Task<ResponseItemDto<IReview>> DeleteReviewAsync(Guid id)
+    {
+        var query1 = _dbContext.Reviews
+            .Where(i => i.ReviewId == id);
+
+        var item = await query1.FirstOrDefaultAsync<ReviewDbM>();
+
+        if(item == null)
+        {
+            throw new ArgumentException($"Review with id {id} not found");
+        }
+
+        _dbContext.Reviews.Remove(item);
+        await _dbContext.SaveChangesAsync();
+        return new ResponseItemDto<IReview>()
+        {
+            #if DEBUG
+            ConnectionString = _dbContext.dbConnection,
+            #endif
+
+            Item = item
+        };
+    }
+
     public async Task navProp_ReviewCUdto_to_ReviewDbM(ReviewCUdto itemDtoSrc, ReviewDbM itemDst)
     {
         var user = await _dbContext.Users.FirstOrDefaultAsync(

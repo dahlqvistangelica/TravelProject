@@ -7,7 +7,7 @@ using Models.Interfaces;
 using Seido.Utilities.SeedGenerator;
 
 namespace DbModels;
-[Table("Countries")]
+[Table("Countries", Schema = "supusr")]
 public class CountryDbM : Country, ISeed<CountryDbM>, IEquatable<CountryDbM>
 {
     [Key]

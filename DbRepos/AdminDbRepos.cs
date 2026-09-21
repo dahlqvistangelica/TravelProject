@@ -27,27 +27,13 @@ public class AdminDbRepos
         _dbContext = context;
     }
     #endregion
-        public async Task<ResponseItemDto<GstUsrInfoAllDto>> DbInfo()
+        public async Task<ResponseItemDto<GstUsrInfoAllDto>> DbInfoAsync()
     {
         var info = new GstUsrInfoAllDto();
-        info.Db = new GstUsrInfoDbDto
-        {
-            NrSeededAttractions = await _dbContext.Attractions.Where(f => f.Seeded).CountAsync(),
-            NrUnseededAttractions = await _dbContext.Attractions.Where(f => !f.Seeded).CountAsync(),
-            NrAttractionssWithAddress = await _dbContext.Attractions.Where(f => f.AddressId != null).CountAsync(),
-
-            NrSeededAddresses = await _dbContext.Addresses.Where(f => f.Seeded).CountAsync(),
-            NrUnseededAddresses = await _dbContext.Addresses.Where(f => !f.Seeded).CountAsync(),
-
-            NrSeededUsers = await _dbContext.Users.Where(f => f.Seeded).CountAsync(),
-            NrUnseededUsers = await _dbContext.Users.Where(f => !f.Seeded).CountAsync(),
-
-            NrSeededReviews = await _dbContext.Reviews.Where(f => f.Seeded).CountAsync(),
-            NrUnseededReviews = await _dbContext.Reviews.Where(f => !f.Seeded).CountAsync(),
-
-            NrSeededCategories = await _dbContext.Categories.Where(f => f.Seeded).CountAsync(),
-            NrUnSeededCategories = await _dbContext.Categories.Where(f=> !f.Seeded).CountAsync()
-        };
+        info.Db = await _dbContext.InfoDbView.FirstAsync();
+        info.Attractions = await _dbContext.InfoAttractionsView.ToListAsync();
+        info.Users = await _dbContext.InfoUsersView.ToListAsync();
+        info.Cities = await _dbContext.InfoCitiesView.ToListAsync();
 
         return new ResponseItemDto<GstUsrInfoAllDto>
         {
@@ -107,7 +93,7 @@ public class AdminDbRepos
         _dbContext.Attractions.AddRange(attractions);
         
         await _dbContext.SaveChangesAsync();
-        return await DbInfo();
+        return await DbInfoAsync();
     }
 
     public async Task<ResponseItemDto<GstUsrInfoAllDto>> RemoveSeedAsync(bool seeded)
@@ -158,6 +144,6 @@ public class AdminDbRepos
         }
         await reader.CloseAsync();
 
-        return await DbInfo();
+        return await DbInfoAsync();
     }
 }

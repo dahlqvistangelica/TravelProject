@@ -22,5 +22,5 @@ public class ReviewServiceDb: IReviewService
 
   public Task<ResponseItemDto<IReview>> ReadReviewAsync(Guid id, bool flat) => _repo.ReadReviewAsync(id, flat);
   public Task<ResponseItemDto<IReview>> CreateReviewAsync(ReviewCUdto itemDto) => _repo.CreateReviewAsync(itemDto);
-
+  public Task<ResponseItemDto<IReview>> DeleteReviewAsync(Guid id) => _repo.DeleteReviewAsync(id);
 }

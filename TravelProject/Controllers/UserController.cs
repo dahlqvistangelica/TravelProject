@@ -159,7 +159,7 @@ namespace TravelProject.Controllers
       [ActionName("ReadUsers")]
       [ProducesResponseType(200, Type = typeof(ResponsePageDto<IUser>))]
       [ProducesResponseType(400, Type = typeof(string))]
-      public async Task<IActionResult> ReadUsers(string seeded = "true", string flat="true", string filter="true",string pageNr = "0", string pageSize="10")
+      public async Task<IActionResult> ReadUsers(string seeded = "true", string flat="true", string filter=null,string pageNr = "0", string pageSize="10")
     {
       try{
       bool seededArg = bool.Parse(seeded);

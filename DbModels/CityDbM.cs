@@ -7,7 +7,7 @@ using Models.Interfaces;
 using Seido.Utilities.SeedGenerator;
 
 namespace DbModels;
-[Table("Cities")]
+[Table("Cities", Schema = "supusr" )]
 public class CityDbM : City, ISeed<CityDbM>, IEquatable<CityDbM>
 {
     [Key]
@@ -15,7 +15,7 @@ public class CityDbM : City, ISeed<CityDbM>, IEquatable<CityDbM>
  
     public override string Name {get; set; }
     [JsonIgnore]
-    public Guid? CountryId {get; set;}
+    public Guid CountryId {get; set;}
     [NotMapped]
     public override ICountry Country { get => CountryDbM; set => throw new NotImplementedException(); }
     [JsonIgnore]
