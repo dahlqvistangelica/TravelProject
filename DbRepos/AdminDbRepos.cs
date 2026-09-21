@@ -47,9 +47,13 @@ public class AdminDbRepos
 
    public async Task<ResponseItemDto<GstUsrInfoAllDto>> RobustSeedingAsync()
     {
+        //Remove all seeded data first, then seed again
+        await RemoveSeedAsync(true);
 
+        //Create a new seed generator and generate the data
         var fn = Path.GetFullPath(_seedSource);
         var seeder = new SeedGenerator(fn);
+        
         var countries = seeder.UniqueItemsToList<CountryDbM>(4);
         var categories = seeder.UniqueItemsToList<CategoryDbM>(30);
         var attractions = seeder.ItemsToList<AttractionDbM>(1000);
@@ -111,7 +115,9 @@ public class AdminDbRepos
             new SqlParameter("nrAddressesAffected", SqlDbType.Int) {Direction = ParameterDirection.Output},
             new SqlParameter("nrCategoriesAffected", SqlDbType.Int) {Direction = ParameterDirection.Output},
             new SqlParameter("nrReviewsAffected", SqlDbType.Int) {Direction = ParameterDirection.Output},
-            new SqlParameter("nrUsersAffected", SqlDbType.Int) {Direction = ParameterDirection.Output}
+            new SqlParameter("nrUsersAffected", SqlDbType.Int) {Direction = ParameterDirection.Output},
+            new SqlParameter("nrCitiesAffected", SqlDbType.Int) {Direction = ParameterDirection.Output},
+            new SqlParameter("nrCountriesAffected", SqlDbType.Int) {Direction = ParameterDirection.Output}
         };
 
         command.Parameters.AddRange(parameters.ToArray());

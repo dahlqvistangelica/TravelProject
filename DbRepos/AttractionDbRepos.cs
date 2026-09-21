@@ -34,6 +34,8 @@ public class AttractionDbRepos
             query = _dbContext.Attractions.AsNoTracking()
                     .Include(i => i.AddressDbM)
                     .ThenInclude(i => i.CityDbM)
+                    .ThenInclude(i => i.CountryDbM)
+                    .Include(i => i.CategoryDbM)
                     .Include(i => i.ReviewsDbM);
         }
         var ret = new ResponsePageDto<IAttraction>()
@@ -43,20 +45,30 @@ public class AttractionDbRepos
             #endif
 
             DbItemsCount = await query
-            .Where(i => i.Seeded == seeded &&
-                        (i.Name.ToLower().Contains(filterName) ||
-                         i.CategoryDbM.CategoryName.ToLower().Contains(filterCat) ||
-                         i.AddressDbM.CityDbM.Name.ToLower().Contains(filterPlace) ||
-                         i.AddressDbM.CityDbM.CountryDbM.Name.ToLower().Contains(filterPlace) || 
-                         i.Description.ToLower().Contains(filterDesc)) )
+            .Where(i =>
+    i.Seeded == seeded &&
+    (string.IsNullOrEmpty(filterName) ||
+     i.Name.Contains(filterName)) &&
+    (string.IsNullOrEmpty(filterDesc) ||
+     i.Description.Contains(filterDesc)) &&
+    (string.IsNullOrEmpty(filterCat) ||
+     i.CategoryDbM.CategoryName.Contains(filterCat)) &&
+    (string.IsNullOrEmpty(filterPlace) ||
+     i.AddressDbM.CityDbM.Name.Contains(filterPlace) ||
+     i.AddressDbM.CityDbM.CountryDbM.Name.Contains(filterPlace)))
                         .CountAsync(),
             PageItems = await query
-                        .Where(i => i.Seeded == seeded &&
-                        (i.Name.ToLower().Contains(filterName) ||
-                         i.CategoryDbM.CategoryName.ToLower().Contains(filterCat) ||
-                         i.AddressDbM.CityDbM.Name.ToLower().Contains(filterPlace) ||
-                         i.AddressDbM.CityDbM.CountryDbM.Name.ToLower().Contains(filterPlace) || 
-                         i.Description.ToLower().Contains(filterDesc)) )
+                        .Where(i =>
+    i.Seeded == seeded &&
+    (string.IsNullOrEmpty(filterName) ||
+     i.Name.Contains(filterName)) &&
+    (string.IsNullOrEmpty(filterDesc) ||
+     i.Description.Contains(filterDesc)) &&
+    (string.IsNullOrEmpty(filterCat) ||
+     i.CategoryDbM.CategoryName.Contains(filterCat)) &&
+    (string.IsNullOrEmpty(filterPlace) ||
+     i.AddressDbM.CityDbM.Name.Contains(filterPlace) ||
+     i.AddressDbM.CityDbM.CountryDbM.Name.Contains(filterPlace)))
                         
                         .Skip(pageNumber*pageSize)
                         .Take(pageSize)
@@ -79,6 +91,8 @@ public class AttractionDbRepos
             query = _dbContext.Attractions.AsNoTracking()
             .Include(i => i.ReviewsDbM)
             .Include(i => i.AddressDbM)
+            .ThenInclude(i => i.CityDbM)
+            .ThenInclude(i => i.CountryDbM)
             .Include(i => i.CategoryDbM);
         }
 

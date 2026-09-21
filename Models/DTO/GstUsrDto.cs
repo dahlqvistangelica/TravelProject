@@ -16,6 +16,10 @@ public class GstUsrInfoDbDto
 
     public int NrSeededReviews { get; set; } = 0;
     public int NrUnseededReviews { get; set; } = 0;
+
+    public int NrCities { get; set; } = 0;
+    public int NrUsers {get; set;} = 0;
+    public int NrAttractions {get; set;} = 0;
 }
 
 public class GstUsrInfoAttractionsDto
