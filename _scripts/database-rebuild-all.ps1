@@ -9,7 +9,7 @@
 # .\database-rebuild-all.ps1 databasename [sqlserver|mysql|postgresql] [docker|azure] [root|dbo|supusr|usr|gstusr] appsettingsFolder
 
 # example:
-# .\database-rebuild-all.ps1 sql-travel sqlserver docker dbo ..\TravelProject
+# .\database-rebuild-all.ps1 sql-travel sqlserver docker root ..\TravelProject
 # .\database-rebuild-all.ps1 sql-travel sqlserver docker dbo ..\AppRazor
 # .\database-rebuild-all.ps1 sql-travel sqlserver docker dbo ..\AppMvc
 

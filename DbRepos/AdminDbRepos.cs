@@ -137,7 +137,7 @@ public class AdminDbRepos
             {
                 NrSeededAttractions = Convert.ToInt32(reader["NrSeededAttractions"]),
                 NrUnseededAttractions = Convert.ToInt32(reader["NrUnseededAttractions"]),
-                NrAttractionssWithAddress = Convert.ToInt32(reader["NrAttractionsWithAddress"]),
+                NrAttractionsWithAddress = Convert.ToInt32(reader["NrAttractionsWithAddress"]),
                 NrSeededAddresses = Convert.ToInt32(reader["NrSeededAddresses"]),
                 NrUnseededAddresses = Convert.ToInt32(reader["NrUnseededAddresses"]),
                 NrSeededCategories = Convert.ToInt32(reader["NrSeededCategories"]),

@@ -190,9 +190,47 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.ToTable("Users", "supusr");
                 });
 
+            modelBuilder.Entity("Models.DTO.GstUsrInfoAttractionsDto", b =>
+                {
+                    b.Property<string>("Category")
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("City")
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<int>("NrAttractions")
+                        .HasColumnType("int");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("vwInfoAttractions", "gstusr");
+                });
+
+            modelBuilder.Entity("Models.DTO.GstUsrInfoCitiesDto", b =>
+                {
+                    b.Property<string>("Country")
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<int>("NrCities")
+                        .HasColumnType("int");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("vwInfoCities", "gstusr");
+                });
+
             modelBuilder.Entity("Models.DTO.GstUsrInfoDbDto", b =>
                 {
+                    b.Property<int>("NrAttractions")
+                        .HasColumnType("int");
+
                     b.Property<int>("NrAttractionssWithAddress")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NrCities")
                         .HasColumnType("int");
 
                     b.Property<int>("NrSeededAddresses")
@@ -225,9 +263,28 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.Property<int>("NrUnseededUsers")
                         .HasColumnType("int");
 
+                    b.Property<int>("NrUsers")
+                        .HasColumnType("int");
+
                     b.ToTable((string)null);
 
                     b.ToView("vwInfoDb", "gstusr");
+                });
+
+            modelBuilder.Entity("Models.DTO.GstUsrInfoUsersDto", b =>
+                {
+                    b.Property<string>("FirstName")
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<int>("NrUsers")
+                        .HasColumnType("int");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("vwInfoUsers", "gstusr");
                 });
 
             modelBuilder.Entity("DbModels.AddressDbM", b =>

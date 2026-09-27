@@ -36,7 +36,8 @@ public class AttractionDbRepos
                     .ThenInclude(i => i.CityDbM)
                     .ThenInclude(i => i.CountryDbM)
                     .Include(i => i.CategoryDbM)
-                    .Include(i => i.ReviewsDbM);
+                    .Include(i => i.ReviewsDbM)
+                    .ThenInclude(i => i.UserDbM);
         }
         var ret = new ResponsePageDto<IAttraction>()
         {

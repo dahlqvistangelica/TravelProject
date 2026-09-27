@@ -3,7 +3,7 @@ public class GstUsrInfoDbDto
 {
     public int NrSeededAttractions { get; set; } = 0;
     public int NrUnseededAttractions { get; set; } = 0;
-    public int NrAttractionssWithAddress { get; set; } = 0;
+    public int NrAttractionsWithAddress { get; set; } = 0;
 
     public int NrSeededAddresses { get; set; } = 0;
     public int NrUnseededAddresses { get; set; } = 0;
