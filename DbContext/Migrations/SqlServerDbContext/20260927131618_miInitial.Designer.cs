@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DbContext.Migrations.SqlServerDbContext
 {
     [DbContext(typeof(MainDbContext.SqlServerDbContext))]
-    [Migration("20260927105548_miInitial")]
+    [Migration("20260927131618_miInitial")]
     partial class miInitial
     {
         /// <inheritdoc />
@@ -31,9 +31,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("AttractionId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("CityId")
                         .HasColumnType("uniqueidentifier");
 
@@ -48,8 +45,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                         .HasColumnType("int");
 
                     b.HasKey("AddressId");
-
-                    b.HasIndex("AttractionId");
 
                     b.HasIndex("CityId");
 
@@ -80,7 +75,9 @@ namespace DbContext.Migrations.SqlServerDbContext
 
                     b.HasKey("AttractionId");
 
-                    b.HasIndex("AddressId");
+                    b.HasIndex("AddressId")
+                        .IsUnique()
+                        .HasFilter("[AddressId] IS NOT NULL");
 
                     b.HasIndex("CategoryId");
 
@@ -292,17 +289,11 @@ namespace DbContext.Migrations.SqlServerDbContext
 
             modelBuilder.Entity("DbModels.AddressDbM", b =>
                 {
-                    b.HasOne("DbModels.AttractionDbM", "AttractionDbM")
-                        .WithMany()
-                        .HasForeignKey("AttractionId");
-
                     b.HasOne("DbModels.CityDbM", "CityDbM")
                         .WithMany("AddressesDbM")
                         .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("AttractionDbM");
 
                     b.Navigation("CityDbM");
                 });
@@ -310,8 +301,8 @@ namespace DbContext.Migrations.SqlServerDbContext
             modelBuilder.Entity("DbModels.AttractionDbM", b =>
                 {
                     b.HasOne("DbModels.AddressDbM", "AddressDbM")
-                        .WithMany()
-                        .HasForeignKey("AddressId");
+                        .WithOne("AttractionDbM")
+                        .HasForeignKey("DbModels.AttractionDbM", "AddressId");
 
                     b.HasOne("DbModels.CategoryDbM", "CategoryDbM")
                         .WithMany("AttractionsDbM")
@@ -350,6 +341,11 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.Navigation("AttractionDbM");
 
                     b.Navigation("UserDbM");
+                });
+
+            modelBuilder.Entity("DbModels.AddressDbM", b =>
+                {
+                    b.Navigation("AttractionDbM");
                 });
 
             modelBuilder.Entity("DbModels.AttractionDbM", b =>

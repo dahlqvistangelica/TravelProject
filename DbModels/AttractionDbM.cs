@@ -30,6 +30,7 @@ public class AttractionDbM : Attraction, ISeed<AttractionDbM>
   public override IAddress Address {get => AddressDbM; set => throw new NotImplementedException();}
   [JsonIgnore]
   [ForeignKey("AddressId")]
+  [InverseProperty(nameof(AddressDbM.AttractionDbM))]
   public AddressDbM AddressDbM {get; set;}
   [NotMapped]
   public override List<IReview> Reviews {get => ReviewsDbM.ToList<IReview>() ?? new(); set => throw new NotImplementedException();}

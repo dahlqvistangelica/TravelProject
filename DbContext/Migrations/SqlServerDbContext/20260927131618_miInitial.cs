@@ -89,7 +89,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                     Street = table.Column<string>(type: "varchar(200)", nullable: false),
                     ZipCode = table.Column<int>(type: "int", nullable: false),
                     CityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AttractionId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Seeded = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -164,12 +163,6 @@ namespace DbContext.Migrations.SqlServerDbContext
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Addresses_AttractionId",
-                schema: "supusr",
-                table: "Addresses",
-                column: "AttractionId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Addresses_CityId",
                 schema: "supusr",
                 table: "Addresses",
@@ -179,7 +172,9 @@ namespace DbContext.Migrations.SqlServerDbContext
                 name: "IX_Attractions_AddressId",
                 schema: "supusr",
                 table: "Attractions",
-                column: "AddressId");
+                column: "AddressId",
+                unique: true,
+                filter: "[AddressId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Attractions_CategoryId",
@@ -204,35 +199,21 @@ namespace DbContext.Migrations.SqlServerDbContext
                 schema: "supusr",
                 table: "Reviews",
                 column: "UserId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Addresses_Attractions_AttractionId",
-                schema: "supusr",
-                table: "Addresses",
-                column: "AttractionId",
-                principalSchema: "supusr",
-                principalTable: "Attractions",
-                principalColumn: "AttractionId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Addresses_Attractions_AttractionId",
-                schema: "supusr",
-                table: "Addresses");
-
             migrationBuilder.DropTable(
                 name: "Reviews",
                 schema: "supusr");
 
             migrationBuilder.DropTable(
-                name: "Users",
+                name: "Attractions",
                 schema: "supusr");
 
             migrationBuilder.DropTable(
-                name: "Attractions",
+                name: "Users",
                 schema: "supusr");
 
             migrationBuilder.DropTable(

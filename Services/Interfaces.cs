@@ -32,3 +32,8 @@ public interface IReviewService
   public Task<ResponseItemDto<IReview>> CreateReviewAsync(ReviewCuDto itemDto);
   public Task<ResponseItemDto<IReview>> DeleteReviewAsync(Guid id);
 }
+public interface IAddressService
+{
+  public Task<ResponsePageDto<IAddress>> ReadAddressesAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize);
+  public Task<ResponseItemDto<IAddress>> ReadAddressAsync(Guid id, bool flat);
+}

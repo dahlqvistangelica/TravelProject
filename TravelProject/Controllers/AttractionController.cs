@@ -117,8 +117,6 @@ namespace TravelProject.Controllers;
       return BadRequest(ex.Message);
     }
   }
-
-  [HttpGet()]
   [HttpDelete()]
   [ActionName("DeleteAttraction")]
   [ProducesResponseType(200, Type = typeof(IAttraction))]

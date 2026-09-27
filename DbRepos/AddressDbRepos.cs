@@ -22,13 +22,18 @@ public class AddressDbRepos
     public async Task<ResponsePageDto<IAddress>> ReadAddressesAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize)
     {
         filter??= "";
-        IQueryable<AddressDbM> query = flat ?
-        _dbContext.Addresses.AsNoTracking()
-        : _dbContext.Addresses.AsNoTracking()
+        IQueryable<AddressDbM> query;
+        if(flat)
+        {
+            query = _dbContext.Addresses.AsNoTracking();
+        }
+        else
+        {
+        query = _dbContext.Addresses.AsNoTracking()
             .Include(i => i.AttractionDbM)
             .Include(i => i.CityDbM)
             .ThenInclude(i => i.CountryDbM);
-
+        }
         var ret = new ResponsePageDto<IAddress>()
         {
             #if DEBUG
@@ -70,6 +75,9 @@ public class AddressDbRepos
         else
         {
             var query = _dbContext.Addresses.AsNoTracking()
+            .Include(i => i.AttractionDbM)
+            .Include(i => i.CityDbM)
+            .ThenInclude(i => i.CountryDbM)
             .Where(i => i.AddressId == id);
             item = await query.FirstOrDefaultAsync<IAddress>();
         }

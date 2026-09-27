@@ -52,11 +52,13 @@ builder.Services.AddScoped<AdminDbRepos>();
 builder.Services.AddScoped<AttractionDbRepos>();
 builder.Services.AddScoped<ReviewDbRepos>();
 builder.Services.AddScoped<UserDbRepos>();
+builder.Services.AddScoped<AddressDbRepos>();
 
 builder.Services.AddScoped<IAttractionService, AttractionServiceDb>();
 builder.Services.AddScoped<IReviewService, ReviewServiceDb>();
 builder.Services.AddScoped<IUserService, UserServiceDb>();
 builder.Services.AddScoped<IAdminService, AdminServiceDb>();
+builder.Services.AddScoped<IAddressService, AddressServiceDb>();
 
 var app = builder.Build();
 

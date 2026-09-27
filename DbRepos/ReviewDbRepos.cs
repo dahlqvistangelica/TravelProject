@@ -107,5 +107,14 @@ public class ReviewDbRepos
             throw new ArgumentException($"User with id {itemDtoSrc.UserId} not found");
         }
         itemDst.UserDbM = user;
+
+        var attraction = await _dbContext.Attractions.FirstOrDefaultAsync(
+            a => (a.AttractionId == itemDtoSrc.AttractionId));
+
+        if(attraction == null)
+        {
+            throw new ArgumentException($"Attraction with id {itemDtoSrc.AttractionId} not found");
+        }
+        itemDst.AttractionDbM = attraction;
     }
 }

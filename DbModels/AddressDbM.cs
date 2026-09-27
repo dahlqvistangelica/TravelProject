@@ -31,12 +31,10 @@ public class AddressDbM : Address, ISeed<AddressDbM>, IEquatable<AddressDbM>
   public override bool Equals(object obj) => Equals(obj as AddressDbM);
   public override int GetHashCode() => (Street, ZipCode, City).GetHashCode();
   #endregion
-  [JsonIgnore]
-  public Guid? AttractionId {get; set;}
   [NotMapped]
   public override IAttraction Attraction { get => AttractionDbM; set => throw new NotImplementedException(); }
   [JsonIgnore]
-  [ForeignKey("AttractionId")]
+  [InverseProperty(nameof(AttractionDbM.AddressDbM))]
   public AttractionDbM AttractionDbM { get; set; } = null;
 
   public override AddressDbM Seed(SeedGenerator seeder)

@@ -35,6 +35,12 @@ public DbSet<GstUsrInfoCitiesDto> InfoCitiesView {get; set;}
 #endregion
   protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<AttractionDbM>()
+            .HasOne(attraction => attraction.AddressDbM)
+            .WithOne(address => address.AttractionDbM)
+            .HasForeignKey<AttractionDbM>(attraction => attraction.AddressId)
+            .IsRequired(false);
+
         modelBuilder.Entity<GstUsrInfoDbDto>().ToView("vwInfoDb", "gstusr").HasNoKey();
         modelBuilder.Entity<GstUsrInfoAttractionsDto>().ToView("vwInfoAttractions", "gstusr").HasNoKey();
         modelBuilder.Entity<GstUsrInfoUsersDto>().ToView("vwInfoUsers", "gstusr").HasNoKey();
