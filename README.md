@@ -1,4 +1,4 @@
-![Schema](schema-sql-travel-png)
+![Schema](schema-sql-travel.png)
 
 För att köra: 
  1. Kör database-rebuild-all.ps1 i _scripts-mappen.
