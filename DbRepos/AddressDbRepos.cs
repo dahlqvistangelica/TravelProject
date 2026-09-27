@@ -18,7 +18,16 @@ public class AddressDbRepos
         _logger = logger;
         _dbContext = context;
     }
-
+/// <summary>
+/// Reads a paginated list of addresses from the database based on the provided parameters.
+/// The method allows filtering by seeded status and a search filter, and supports both flat and detailed representations of the address data.
+/// </summary>
+/// <param name="seeded"></param>
+/// <param name="flat"></param>
+/// <param name="filter"></param>
+/// <param name="pageNumber"></param>
+/// <param name="pageSize"></param>
+/// <returns></returns>
     public async Task<ResponsePageDto<IAddress>> ReadAddressesAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize)
     {
         filter??= "";
@@ -61,7 +70,14 @@ public class AddressDbRepos
         };
         return ret;
     }
-
+    /// <summary>
+    /// Reads a single address from the database based on the provided ID and representation type (flat or detailed).
+    /// If the address is not found, an ArgumentException is thrown.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="flat"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
     public async Task<ResponseItemDto<IAddress>> ReadAddressAsync(Guid id, bool flat)
     {
         IAddress item;

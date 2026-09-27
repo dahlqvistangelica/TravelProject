@@ -21,7 +21,14 @@ namespace TravelProject.Controllers
       _logger = logger;
       _service = service;
     }
-    
+    /// <summary>
+    /// Reads a single review from the database based on the provided ID and representation type (flat or detailed).
+    /// If the review is not found, an ArgumentException is thrown.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="flat"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
     [HttpGet()]
     [ActionName("ReadReview")]
     [ProducesResponseType(200, Type = typeof(IReview))]
@@ -47,7 +54,12 @@ namespace TravelProject.Controllers
         return BadRequest(ex.Message);
       }
     }
-
+    /// <summary>
+    /// Creates a new review in the database based on the provided ReviewCuDto.
+    /// If the review already exists, an ArgumentException is thrown.
+    /// </summary>
+    /// <param name="itemDto"></param>
+    /// <returns></returns>
     [HttpPost()]
     [ActionName("CreateReview")]
     [ProducesResponseType(200, Type = typeof(IReview))]
@@ -68,7 +80,13 @@ namespace TravelProject.Controllers
         return BadRequest(ex.Message);
       }
     }
-    
+    /// <summary>
+    /// Deletes a review from the database based on the provided ID.
+    /// If the review is not found, an ArgumentException is thrown.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
     [HttpDelete("{id}")]
     [ActionName("DeleteReview")]
     [ProducesResponseType(200, Type = typeof(IReview))]

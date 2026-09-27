@@ -19,6 +19,10 @@ public class ReviewDbRepos
         _logger = logger;
         _dbContext = context;
     }
+    /// <summary>
+    /// Reads a single review from the database based on the provided ID and representation type (flat or detailed).
+    /// If the review is not found, an ArgumentException is thrown.
+    /// </summary>
     public async Task<ResponseItemDto<IReview>> ReadReviewAsync(Guid id, bool flat)
     {
         IReview item;
@@ -51,6 +55,11 @@ public class ReviewDbRepos
             Item = item
         };
     }
+
+    /// <summary>
+    /// Creates a new review in the database based on the provided ReviewCuDto.
+    /// If a review for the same user and attraction already exists, an ArgumentException is thrown.
+    /// </summary>
     public async Task<ResponseItemDto<IReview>> CreateReviewAsync(ReviewCuDto itemDto)
     {
         if(itemDto.ReviewId != null)
@@ -72,7 +81,10 @@ public class ReviewDbRepos
         return await ReadReviewAsync(item.ReviewId, false);
 
     }
-
+    /// <summary>
+    /// Updates an existing review in the database based on the provided ReviewCuDto.
+    /// If the review does not exist, an ArgumentException is thrown.
+    /// </summary>
     public async Task<ResponseItemDto<IReview>> DeleteReviewAsync(Guid id)
     {
         var query1 = _dbContext.Reviews
@@ -96,7 +108,10 @@ public class ReviewDbRepos
             Item = item
         };
     }
-
+    /// <summary>
+    /// Updates an existing review in the database based on the provided ReviewCuDto.
+    /// If the review does not exist, an ArgumentException is thrown.
+    /// </summary>
     public async Task navProp_ReviewCUdto_to_ReviewDbM(ReviewCuDto itemDtoSrc, ReviewDbM itemDst)
     {
         var user = await _dbContext.Users.FirstOrDefaultAsync(

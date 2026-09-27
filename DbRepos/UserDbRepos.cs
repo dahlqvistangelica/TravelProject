@@ -19,7 +19,11 @@ public class UserDbRepos
         _logger = logger;
         _dbContext = context;
     }
-
+    /// <summary>
+    /// Reads a paginated list of users from the database based on the provided parameters.
+    /// The method allows filtering by seeded status and a search filter, and supports both flat and
+    /// detailed representations of the user data.
+    /// </summary>    
     public async Task<ResponsePageDto<IUser>> ReadUsersAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize)
     {
         filter ??= "";
@@ -60,6 +64,14 @@ public class UserDbRepos
         };
         return ret;
     }
+    /// <summary>
+    /// Reads a single user from the database based on the provided ID and representation type (flat or detailed).
+    /// If the user is not found, an ArgumentException is thrown.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="flat"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
     public async Task<ResponseItemDto<IUser>> ReadUserAsync(Guid id, bool flat)
     {
         IUser item;
@@ -90,6 +102,12 @@ public class UserDbRepos
             Item = item
         };
     }
+
+    /// <summary>
+    /// Updates an existing user in the database based on the provided UserCuDto.
+    /// If the user does not exist, an ArgumentException is thrown.
+    /// </summary>
+    /// 
     public async Task<ResponseItemDto<IUser>> UpdateUserAsync(UserCuDto itemDto)
     {
         var query1 = _dbContext.Users
@@ -118,6 +136,13 @@ public class UserDbRepos
         return await ReadUserAsync(item.UserId, false);
     }
 
+/// <summary>
+/// Deletes a user from the database based on the provided ID.
+/// If the user is not found, an ArgumentException is thrown.
+/// </summary>
+/// <param name="itemDto"></param>
+/// <returns></returns>
+/// <exception cref="ArgumentException"></exception>
     public async Task<ResponseItemDto<IUser>> CreateUserAsync(UserCuDto itemDto)
     {
         if(itemDto.UserId != null)
@@ -140,6 +165,13 @@ public class UserDbRepos
         return await ReadUserAsync(item.UserId, false);
     }
 
+/// <summary>
+/// Deletes a user from the database based on the provided ID.
+/// If the user is not found, an ArgumentException is thrown.
+/// </summary>
+/// <param name="id"></param>
+/// <returns></returns>
+/// <exception cref="ArgumentException"></exception>
     public async Task<ResponseItemDto<IUser>> DeleteUserAsync(Guid id)
     {
         var query1 = _dbContext.Users
@@ -164,6 +196,14 @@ public class UserDbRepos
         };
     }
 
+/// <summary>
+/// Updates an existing user in the database based on the provided UserCuDto.
+/// If the user does not exist, an ArgumentException is thrown.
+/// </summary>
+/// <param name="itemDtoSrc"></param>
+/// <param name="itemDst"></param>
+/// <returns></returns>
+/// <exception cref="ArgumentException"></exception>
     public async Task navProp_UserCUdto_to_UserDbM(UserCuDto itemDtoSrc, UserDbM itemDst)
     {
         List<ReviewDbM> reviews = null;

@@ -23,7 +23,20 @@ namespace TravelProject.Controllers;
     _service = service;
   }
   #endregion
-
+  /// <summary>
+  /// Reads a paginated list of attractions from the database based on the provided parameters.
+  /// The method allows filtering by seeded status and various search filters, and supports both flat and detailed representations of the attraction data.
+  /// </summary>
+  /// <param name="seeded"></param>
+  /// <param name="flat"></param>
+  /// <param name="filterName"></param>
+  /// <param name="filterDesc"></param>
+  /// <param name="filterPlace"></param>
+  /// <param name="filterCat"></param>
+  /// <param name="pageNr"></param>
+  /// <param name="pageSize"></param>
+  /// <returns></returns>
+  /// <exception cref="ArgumentException"></exception>
   [HttpGet()]
   [ActionName("ReadAllAttractions")]
   [ProducesResponseType(200, Type = typeof(ResponsePageDto<IAttraction>))]
@@ -65,6 +78,15 @@ namespace TravelProject.Controllers;
       return BadRequest(ex.Message);
     }
   }
+
+  /// <summary>
+  /// Reads a single attraction from the database based on the provided ID and representation type (flat or detailed).
+  /// If the attraction is not found, an ArgumentException is thrown.
+  /// </summary>
+  /// <param name="id"></param>
+  /// <param name="flat"></param>
+  /// <returns></returns>
+  /// <exception cref="ArgumentException"></exception>
   [HttpGet()]
   [ActionName("ReadAttraction")]
   [ProducesResponseType(200, Type = typeof(IAttraction))]
@@ -92,6 +114,15 @@ namespace TravelProject.Controllers;
     }
   }
 
+  /// <summary>
+  /// Reads a paginated list of attractions that do not have any associated reviews from the database based on the provided parameters.
+  /// The method allows filtering by seeded status and supports both flat and detailed representations of the attraction
+  /// </summary>
+  /// <param name="seeded"></param>
+  /// <param name="flat"></param>
+  /// <param name="pageNr"></param>
+  /// <param name="pageSize"></param>
+  /// <returns></returns>
   [HttpGet()]
   [ActionName("ReadAttractionsWithoutReviews")]
   [ProducesResponseType(200, Type = typeof(ResponsePageDto<IAttraction>))]
@@ -117,6 +148,14 @@ namespace TravelProject.Controllers;
       return BadRequest(ex.Message);
     }
   }
+
+  /// <summary>
+  /// Deletes a single attraction from the database based on the provided ID. If the attraction is not found, an ArgumentException is thrown.
+  /// The method returns the deleted attraction data.
+  /// </summary>
+  /// <param name="id"></param>
+  /// <returns></returns>
+  /// <exception cref="ArgumentException"></exception>
   [HttpDelete()]
   [ActionName("DeleteAttraction")]
   [ProducesResponseType(200, Type = typeof(IAttraction))]
@@ -142,6 +181,14 @@ namespace TravelProject.Controllers;
       return BadRequest(ex.Message);
     }
   }
+  /// <summary>
+  /// Reads a single attraction from the database based on the provided ID and returns it as an AttractionCuDto object.
+  /// If the attraction is not found, an ArgumentException is thrown.
+  /// </summary>
+  /// <param name="id"></param>
+  /// <param name="flat"></param>
+  /// <returns></returns>
+  /// <exception cref="ArgumentException"></exception>
   [HttpGet()]
   [ActionName("ReadAttractionDto")]
   [ProducesResponseType(200, Type = typeof(AttractionCuDto))]
@@ -176,6 +223,14 @@ namespace TravelProject.Controllers;
     }
   }
 
+  /// <summary>
+  /// Updates an existing attraction in the database based on the provided AttractionCuDto.
+  /// If the attraction does not exist, an ArgumentException is thrown.
+  /// </summary>
+  /// <param name="id"></param>
+  /// <param name="item"></param>
+  /// <returns></returns>
+  /// <exception cref="ArgumentException"></exception>
   [HttpPut("{id}")]
   [ActionName("UpdateAttraction")]
   [ProducesResponseType(200, Type = typeof(IAttraction))]
@@ -204,6 +259,12 @@ namespace TravelProject.Controllers;
       return BadRequest(ex.Message);
     }
   }
+  /// <summary>
+  /// Creates a new attraction in the database based on the provided AttractionCuDto.
+  /// If the attraction already exists, an ArgumentException is thrown.
+  /// </summary>
+  /// <param name="item"></param>
+  /// <returns></returns>
   [HttpPost()]
   [ActionName("CreateAttraction")]
   [ProducesResponseType(200, Type = typeof(IAttraction))]

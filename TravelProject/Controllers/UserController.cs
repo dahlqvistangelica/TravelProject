@@ -23,7 +23,12 @@ namespace TravelProject.Controllers
           _logger = logger;
           _service = service;
         }
-  
+      /// <summary>
+      /// Creates a new user in the database based on the provided UserCuDto.
+      /// If the UserCuDto contains a non-null UserId, an ArgumentException is thrown.
+      /// </summary>
+      /// <param name="item"></param>
+      /// <returns></returns>
       [HttpPost()]
       [ActionName("CreateUser")]
       [ProducesResponseType(200, Type = typeof(IUser))]
@@ -41,7 +46,14 @@ namespace TravelProject.Controllers
           return BadRequest(ex.Message);
         }
       }
-  
+      /// <summary>
+      /// Updates an existing user in the database based on the provided UserCuDto.
+      /// If the user does not exist, an ArgumentException is thrown.
+      /// </summary>
+      /// <param name="id"></param>
+      /// <param name="item"></param>
+      /// <returns></returns>
+      /// <exception cref="ArgumentException"></exception>
       [HttpPut("{id}")]
       [ActionName("UpdateUser")]
       [ProducesResponseType(200, Type = typeof(IUser))]
@@ -69,7 +81,13 @@ namespace TravelProject.Controllers
           return BadRequest($"Could not update {nameof(UpdateUser)}: {ex.Message}");
         }
       }
-      
+      /// <summary>
+      /// Reads a single user from the database based on the provided ID and returns a UserCuDto representation.
+      /// If the user is not found, an ArgumentException is thrown.
+      /// </summary>
+      /// <param name="id"></param>
+      /// <returns></returns>
+      /// <exception cref="ArgumentException"></exception>
       [HttpGet()]
       [ActionName("ReadUserDto")]
       [ProducesResponseType(200, Type = typeof(UserCuDto))]
@@ -102,6 +120,13 @@ namespace TravelProject.Controllers
           return BadRequest(ex.Message);
         }
       }
+      /// <summary>
+      /// Deletes a user from the database based on the provided ID.
+      /// If the user is not found, an ArgumentException is thrown.
+      /// </summary>
+      /// <param name="id"></param>
+      /// <returns></returns>
+      /// <exception cref="ArgumentException"></exception>
       [HttpDelete("{id}")]
       [ActionName("DeleteUser")]
       [ProducesResponseType(200, Type = typeof(IUser))]

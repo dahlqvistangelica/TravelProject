@@ -18,7 +18,10 @@ namespace TravelProject.Controllers
         readonly DatabaseConnections _dbConnections = null;
         readonly IAdminService _service;
         
-
+    /// <summary>
+    /// Retrieves the version information of the application, including the current version and any relevant metadata.
+    /// The method returns a VersionOptions object encapsulated in an IActionResult.
+    /// </summary>
     [HttpGet]
     [ActionName("Environment")]
     [ProducesResponseType(200, Type = typeof(DatabaseConnections.SetupInformation))]
@@ -37,7 +40,11 @@ namespace TravelProject.Controllers
       }
     }
 
-
+    /// <summary>
+    /// Retrieves the version information of the application, including the current version and any relevant metadata.
+    /// The method returns a VersionOptions object encapsulated in an IActionResult.
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     [ActionName("Version")]
     [ProducesResponseType(typeof(VersionOptions), 200)]
@@ -53,6 +60,11 @@ namespace TravelProject.Controllers
         return BadRequest(ex.Message);
       }
     }
+    /// <summary>
+    /// Removes all seeded data from the database and then reseeds it with new data generated from a seed source file.
+    /// The method ensures that the number of attractions does not exceed the number of available addresses to avoid duplicates. It returns a summary of the database state after reseeding.
+    /// </summary>
+    /// <returns></returns>
     [HttpGet()]
     [ActionName("RobustSeeding")]
     [ProducesResponseType(200, Type = typeof(string))]
@@ -72,6 +84,11 @@ namespace TravelProject.Controllers
       }
     }
 
+    /// <summary>
+    /// Removes all seeded data from the database.
+    /// </summary>
+    /// <param name="seeded"></param>
+    /// <returns></returns>
     [HttpGet()]
     [ActionName("RemoveSeed")]
     [ProducesResponseType(200, Type = typeof(GstUsrInfoAllDto))]
@@ -91,7 +108,11 @@ namespace TravelProject.Controllers
         return BadRequest(ex.Message);
       }
     }
-
+    /// <summary>
+    /// Retrieves comprehensive database information, including details about attractions, users, cities, and countries.
+    /// The method returns a GstUsrInfoAllDto object encapsulated in a ResponseItemDto.
+    /// </summary>
+    /// <returns></returns>
     [HttpGet()]
     [ActionName("DbInfo")]
     [ProducesResponseType(200, Type = typeof(GstUsrInfoAllDto))]

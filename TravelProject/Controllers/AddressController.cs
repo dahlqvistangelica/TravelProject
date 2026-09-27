@@ -23,6 +23,17 @@ namespace TravelProject.Controllers;
     _service = service;
   }
   #endregion
+  /// <summary>
+  /// Reads a paginated list of addresses from the database based on the provided parameters.
+  /// The method allows filtering by seeded status and a search filter, and supports both flat and detailed representations of the address data.
+  /// </summary>
+  /// <param name="seeded"></param>
+  /// <param name="flat"></param>
+  /// <param name="filter"></param>
+  /// <param name="pageNr"></param>
+  /// <param name="pageSize"></param>
+  /// <returns></returns>
+  /// <exception cref="ArgumentException"></exception>
   [HttpGet()]
       [ActionName("ReadAddresses")]
       [ProducesResponseType(200, Type = typeof(ResponsePageDto<IAddress>))]
@@ -50,6 +61,14 @@ namespace TravelProject.Controllers;
         return BadRequest(ex.Message);
       }
     } 
+    /// <summary>
+    /// Reads a single address from the database based on the provided ID and representation type (flat or detailed).
+    /// If the address is not found, an ArgumentException is thrown.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="flat"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
   [HttpGet()]
   [ActionName("ReadAddress")]
   [ProducesResponseType(200, Type = typeof(IAddress))]

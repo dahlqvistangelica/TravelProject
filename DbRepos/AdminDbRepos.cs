@@ -27,6 +27,12 @@ public class AdminDbRepos
         _dbContext = context;
     }
     #endregion
+
+    /// <summary>
+    /// Retrieves comprehensive database information, including details about attractions, users, cities, and countries.
+    /// The method returns a GstUsrInfoAllDto object encapsulated in a ResponseItemDto, which contains the database state and relevant metadata.
+    /// </summary>
+    /// <returns>A ResponseItemDto containing a GstUsrInfoAllDto object with database information</returns>
         public async Task<ResponseItemDto<GstUsrInfoAllDto>> DbInfoAsync()
     {
         var info = new GstUsrInfoAllDto();
@@ -45,6 +51,11 @@ public class AdminDbRepos
         };
     }
 
+/// <summary>
+///    Removes all seeded data from the database and then reseeds it with new data generated from a seed source file.
+///    The method ensures that the number of attractions does not exceed the number of available addresses to avoid duplicates. It returns a summary of the database state after reseeding.
+/// </summary>
+/// <returns></returns>
   public async Task<ResponseItemDto<GstUsrInfoAllDto>> RobustSeedingAsync()
 {
     // Remove all seeded data first, then seed again
@@ -116,7 +127,12 @@ public class AdminDbRepos
     await _dbContext.SaveChangesAsync();
     return await DbInfoAsync();
 }
-
+/// <summary>
+/// Removes all seeded data from the database by executing a stored procedure.
+/// The method returns a summary of the affected records in various tables.
+/// </summary>
+/// <param name="seeded"></param>
+/// <returns></returns>
     public async Task<ResponseItemDto<GstUsrInfoAllDto>> RemoveSeedAsync(bool seeded)
     {
         var connection = _dbContext.Database.GetDbConnection();

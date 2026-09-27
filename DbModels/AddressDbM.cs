@@ -34,7 +34,7 @@ public class AddressDbM : Address, ISeed<AddressDbM>, IEquatable<AddressDbM>
   [NotMapped]
   public override IAttraction Attraction { get => AttractionDbM; set => throw new NotImplementedException(); }
   [JsonIgnore]
-  [InverseProperty("AddressDbM")]
+  [InverseProperty("AddressDbM")] // This property is the inverse of the AddressDbM property in AttractionDbM. One-to-one relationship, accessible from both sides.
   public AttractionDbM AttractionDbM { get; set; } = null;
 
   public override AddressDbM Seed(SeedGenerator seeder)

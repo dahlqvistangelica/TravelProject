@@ -17,7 +17,19 @@ public class AttractionDbRepos
         _logger = logger;
         _dbContext = context;
     }
-
+    /// <summary>
+    /// Reads a paginated list of attractions from the database based on the provided parameters.
+    /// The method allows filtering by seeded status, name, description, place, and category, and supports both flat and detailed representations of the attraction data.
+    /// </summary>
+    /// <param name="seeded"></param>
+    /// <param name="flat"></param>
+    /// <param name="filterName"></param>
+    /// <param name="filterDesc"></param>
+    /// <param name="filterPlace"></param>
+    /// <param name="filterCat"></param>
+    /// <param name="pageNumber"></param>
+    /// <param name="pageSize"></param>
+    /// <returns></returns>
     public async Task<ResponsePageDto<IAttraction>> ReadAttractionsAsync(bool seeded, bool flat, string filterName, string filterDesc, string filterPlace, string filterCat, int pageNumber, int pageSize)
     {
         filterDesc ??= "";
@@ -80,6 +92,15 @@ public class AttractionDbRepos
         };
         return ret;
     }
+    /// <summary>
+    /// Reads a single attraction from the database based on the provided ID and representation type (flat or detailed).
+    /// If the attraction is not found, an ArgumentException is thrown.
+    /// </summary>
+    /// <param name="seeded"></param>
+    /// <param name="flat"></param>
+    /// <param name="pageNumber"></param>
+    /// <param name="pageSize"></param>
+    /// <returns></returns>
     public async Task<ResponsePageDto<IAttraction>> ReadAttractionsWithoutReviewsAsync(bool seeded, bool flat, int pageNumber, int pageSize)
     {
         IQueryable<AttractionDbM> query;
@@ -116,7 +137,14 @@ public class AttractionDbRepos
         };
         return ret;
     }
-
+        /// <summary>
+        /// Reads a single attraction from the database based on the provided ID and representation type (flat or detailed).
+        /// If the attraction is not found, an ArgumentException is thrown.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="flat"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public async Task<ResponseItemDto<IAttraction>> ReadAttractionAsync(Guid id, bool flat)
     {
         IAttraction item;
@@ -154,6 +182,14 @@ public class AttractionDbRepos
         };
         
     }
+
+    /// <summary>
+    /// Deletes an attraction from the database based on the provided ID.
+    /// If the attraction is not found, an ArgumentException is thrown.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
     public async Task<ResponseItemDto<IAttraction>> DeleteAttractionAsync(Guid id)
     {
         var query1 = _dbContext.Attractions
@@ -178,6 +214,13 @@ public class AttractionDbRepos
         };
     }
 
+/// <summary>
+/// Deletes an attraction from the database based on the provided ID.
+/// If the attraction is not found, an ArgumentException is thrown.
+/// </summary>
+/// <param name="itemDto"></param>
+/// <returns></returns>
+/// <exception cref="ArgumentException"></exception>
     public async Task<ResponseItemDto<IAttraction>> UpdateAttractionAsync (AttractionCuDto itemDto)
     {
         var query1 = _dbContext.Attractions
@@ -204,6 +247,14 @@ public class AttractionDbRepos
 
     }
 
+    /// <summary>
+    /// Deletes an attraction from the database based on the provided ID.
+    /// If the attraction is not found, an ArgumentException is thrown.
+    /// </summary>
+    /// <param name="itemDto"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+
     public async Task<ResponseItemDto<IAttraction>> CreateAttractionAsync (AttractionCuDto itemDto)
     {
         if(itemDto.AttractionId != null)
@@ -228,6 +279,15 @@ public class AttractionDbRepos
 
         return await ReadAttractionAsync(item.AttractionId, false);
     }
+    /// <summary>
+    /// Maps the navigation properties from an AttractionCuDto to an AttractionDbM entity.
+    /// This method retrieves related entities from the database based on the IDs provided in the DTO and assigns them to the corresponding navigation properties of the entity.
+    /// If any related entity is not found, an ArgumentException is thrown.
+    /// </summary>
+    /// <param name="itemDtoSrc"></param>
+    /// <param name="itemDst"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
     private async Task navProp_AttractionCUdto_to_AttractionDbM(AttractionCuDto itemDtoSrc, AttractionDbM itemDst)
     {
         itemDst.AddressDbM = (itemDtoSrc.AddressId != null) ? await _dbContext.Addresses.FirstOrDefaultAsync(
