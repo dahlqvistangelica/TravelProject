@@ -17,6 +17,7 @@ namespace TravelProject.Controllers
         readonly VersionOptions _versionOptions;
         readonly DatabaseConnections _dbConnections = null;
         readonly IAdminService _service;
+        
 
     [HttpGet]
     [ActionName("Environment")]

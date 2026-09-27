@@ -41,13 +41,13 @@ public class ReviewDbM : Review, ISeed<ReviewDbM>, IEquatable<ReviewDbM>
     #region constructors
     public ReviewDbM(){ }
 
-    public ReviewDbM(ReviewCUdto dto): this()
+    public ReviewDbM(ReviewCuDto dto): this()
     {
         UpdateFromDTO(dto);
     }
     #endregion
 
-    public ReviewDbM UpdateFromDTO(ReviewCUdto org)
+    public ReviewDbM UpdateFromDTO(ReviewCuDto org)
     {
         if(org == null) return null;
         Comment = org.Comment;

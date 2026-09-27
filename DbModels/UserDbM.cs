@@ -18,7 +18,7 @@ public class UserDbM : User, ISeed<UserDbM>, IEquatable<UserDbM>
     public override string LastName { get; set; }
     public override string Email {get; set;}
     [NotMapped]
-    public override List<IReview> Reviews {get => ReviewsDbM.ToList<IReview>(); set => throw new NotImplementedException();}
+    public override List<IReview> Reviews {get => ReviewsDbM?.ToList<IReview>(); set => new NotImplementedException();}
     
     [JsonIgnore]
     public List<ReviewDbM> ReviewsDbM {get; set;}
@@ -34,12 +34,12 @@ public class UserDbM : User, ISeed<UserDbM>, IEquatable<UserDbM>
     #region constructors
     public UserDbM() { }
 
-    public UserDbM(UserCUdto dto): this()
+    public UserDbM(UserCuDto dto): this()
     {
         UpdateFromDTO(dto);
     }
 
-    public UserDbM UpdateFromDTO(UserCUdto org)
+    public UserDbM UpdateFromDTO(UserCuDto org)
     {
         if(org == null) return null;
         FirstName = org.FirstName;

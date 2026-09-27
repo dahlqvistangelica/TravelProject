@@ -16,7 +16,11 @@ namespace Seido.Utilities.SeedGenerator
     {
         public string Paragraph { get; init; }
         public List<string> Sentences { get; init; }
-        public List<string> Words { get; init; }
+    }
+    public class SeededDescriptions
+    {
+        public string Description { get; init; }
+        public List<string> DescSentences { get; init; }
     }
 
     public class SeededQuote
@@ -39,7 +43,7 @@ namespace Seido.Utilities.SeedGenerator
         public string LastName => _seeds.Names.LastNames[this.Next(0, _seeds.Names.LastNames.Count)];
 
         #endregion
-        
+
         #region Addresses
         public string Country => _seeds.Addresses[this.Next(0, _seeds.Addresses.Count)].Country;
         public string City(string Country = null)
@@ -81,7 +85,7 @@ namespace Seido.Utilities.SeedGenerator
 
             return $"{fname}.{lname}@{_seeds.Domains.Domains[this.Next(0, _seeds.Domains.Domains.Count)]}";
         }
-        
+
 
         public string PhoneNr => $"{this.Next(700, 800)} {this.Next(100, 1000)} {this.Next(100, 1000)}";
         #endregion
@@ -89,7 +93,7 @@ namespace Seido.Utilities.SeedGenerator
 
         #region Review
         public List<SeededReviews> AllReviews => _seeds.Reviews
-            .Select(l => new SeededReviews { Paragraph = l.Paragraph, Sentences = l.Sentences, Words = l.Words })
+            .Select(l => new SeededReviews { Paragraph = l.Paragraph, Sentences = l.Sentences })
             .ToList();
 
         public List<SeededReviews> ReviewParagraphs(int tryNrOfItems)
@@ -110,81 +114,41 @@ namespace Seido.Utilities.SeedGenerator
             return sRet;
         }
 
-        public List<string> ReviewWords(int tryNrOfItems)
-        {
-            var sRet = new List<string>();
-            for (int i = 0; i < tryNrOfItems; i++)
-            {
-                var pIdx = this.Next(0, AllReviews.Count);
-                var wIdx = this.Next(0, AllReviews[pIdx].Words.Count);
-
-                sRet.Add(AllReviews[pIdx].Words[wIdx]);
-            }
-            return sRet;
-        }
-
         public string ReviewParagraph => ReviewParagraphs(1).FirstOrDefault()?.Paragraph;
         public string Comment => ReviewSentence(1).FirstOrDefault();
         #endregion
 
+        #region Description
+        public List<SeededDescriptions> AllDescriptions => _seeds.Descriptions
+            .Select(l => new SeededDescriptions { Description = l.Description, DescSentences = l.DescSentences })
+            .ToList();
 
-        #region DateTime, bool and decimal
-        public DateTime DateAndTime(int? fromYear = null, int? toYear = null)
+        public List<SeededDescriptions> DescriptionParagraphs(int tryNrOfItems)
         {
-            bool dateOK = false;
-            DateTime _date = default;
-            while (!dateOK)
+            return UniqueIndexPickedFromList(tryNrOfItems, AllDescriptions);
+        }
+
+        public List<string> DescriptionSentence(int tryNrOfItems)
+        {
+            var sRet = new List<string>();
+            for (int i = 0; i < tryNrOfItems; i++)
             {
-                fromYear ??= DateTime.Today.Year;
-                toYear ??= DateTime.Today.Year + 1;
+                var pIdx = this.Next(0, AllDescriptions.Count);
+                var sIdx = this.Next(0, AllDescriptions[pIdx].DescSentences.Count);
 
-                try
-                {
-                    int year = this.Next(Math.Min(fromYear.Value, toYear.Value),
-                        Math.Max(fromYear.Value, toYear.Value));
-                    int month = this.Next(1, 13);
-                    int day = this.Next(1, 32);
-
-                    _date = new DateTime(year, month, day);
-                    dateOK = true;
-                }
-                catch
-                {
-                    dateOK = false;
-                }
+                sRet.Add(AllDescriptions[pIdx].DescSentences[sIdx]);
             }
-
-            return DateTime.SpecifyKind(_date, DateTimeKind.Utc);
+            return sRet;
         }
 
-        public bool Bool => (this.Next(0, 10) < 5) ? true : false;
+        public string Description => DescriptionParagraphs(1).FirstOrDefault()?.Description;
+        public string DescSentence => DescriptionSentence(1).FirstOrDefault();
+        #endregion                
 
-        public decimal NextDecimal(int _from, int _to) => this.Next(_from * 1000, _to * 1000) / 1000M;
-        #endregion
-
-        #region From own String, Enum and List<TItem>
-        public string FromString(string _inputString, string _splitDelimiter = ", ")
-        {
-            var _sarray = _inputString.Split(_splitDelimiter);
-            return _sarray[this.Next(0, _sarray.Length)];
-        }
-        public TEnum FromEnum<TEnum>() where TEnum : struct
-        {
-            if (typeof(TEnum).IsEnum)
-            {
-
-                var _names = typeof(TEnum).GetEnumNames();
-                var _name = _names[this.Next(0, _names.Length)];
-
-                return Enum.Parse<TEnum>(_name);
-            }
-            throw new ArgumentException("Not an enum type");
-        }
         public TItem FromList<TItem>(List<TItem> items)
         {
             return items[this.Next(0, items.Count)];
         }
-        #endregion
 
         #region Generate seeded List of TItem
 
@@ -311,7 +275,7 @@ namespace Seido.Utilities.SeedGenerator
             return retList;
         }
         #endregion
- 
+
         #region initialize master content
         SeedJsonContent CreateMasterSeedFile()
         {
@@ -339,6 +303,38 @@ namespace Seido.Utilities.SeedGenerator
                         new SeedReview { jsonParagraph =
                             "A dull experience with indifferent and unhelpful staff at the counter. Hard to find parking and the queues were poorly organized. Several features were not working properly during our visit. Felt mostly like an overpriced tourist trap with little substance. We will not be returning here again." },
             },
+                Descriptions = new List<SeedDescription>
+                {
+                    new SeedDescription { jsonDescription =
+                        "Standing high above the rocky shoreline, this 14th-century fortress features intact stone ramparts and twin watchtowers. Within the outer walls lie vaulted chambers, an armory display, and a central cobblestone courtyard. A narrow perimeter trail provides panoramic vistas across the open sea and adjacent archipelago. The lower bastion houses original iron cannons positioned toward the historic harbor entrance. Paved walkways connect the main gate to the preserved inner keep." },
+                    new SeedDescription { jsonDescription =
+                        "This expansive Victorian-era glasshouse complex preserves hundreds of tropical and subtropical plant species across distinct climate zones. Meandering brick paths lead visitors through dense palm collections, flowering orchids, and arid desert succulents. Elevated iron walkways offer close-up views of the canopy layer and cascading indoor water features. An adjoining heritage herb garden showcases medicinal and culinary specimens arranged by geographical origin. Natural light filters through the curved iron framework throughout the entire structure."
+                    },
+                    new SeedDescription { jsonDescription =
+                        "Carved by subterranean rivers over millions of years, this underground network features towering stalactites and mineral-rich limestone curtains. Illuminated footpaths wind past subterranean pools and cavernous halls with ceilings rising over twenty meters high. Natural rock formations create dramatic natural arches throughout the main touring gallery. The internal temperature remains constant year-round, accompanied by high humidity and natural echoing acoustics. Wooden footbridges cross the deeper ravines along the designated visitors' route."
+                    },
+                    new SeedDescription { jsonDescription =
+                        "Enclosed by pastel-colored merchant townhouses from the 17th century, this central square serves as the historical heart of the district. The center features an ornate stone fountain surrounded by traditional open-air craft and produce stalls. On the eastern edge stands a brick market hall offering regional delicacies and specialty goods under timber-beamed ceilings. Cobblestone pedestrian alleys radiate outward from the plaza toward nearby canal banks. Historic gas lanterns line the perimeter and illuminate the architectural facades after dusk."
+                    },
+                    new SeedDescription { jsonDescription =
+                        "Spanning a deep alpine gorge, this narrow suspension bridge hangs over a rushing glacial river below. Anchored into solid granite bluffs, the steel-cable structure sways gently in the mountain winds. Marked hiking trails link the bridge landing to panoramic wooden platforms overlooking snowcapped peaks and dense pine forests. Informational signboards along the route detail the region's geological formation and alpine wildlife habitats. The surrounding terrain transitions from subalpine forest into rugged scree slopes."
+                    },
+                    new SeedDescription { jsonDescription =
+                        "Spread across rolling pastureland, this open-air museum preserves over thirty traditional timber homesteads, windmills, and barns. Gravel paths meander through working heritage fields cultivated with heirloom grain varieties and traditional garden vegetables. Heritage livestock breeds, including sheep and draft horses, graze in stone-walled paddocks throughout the grounds. Inside the cottages, period furnishings and traditional hearths demonstrate rural daily life from the late 19th century. A restored blacksmith workshop stands adjacent to the central milling pond."
+                    },
+                    new SeedDescription { jsonDescription =
+                        "Positioned along a refurbished industrial pier, this cultural center features striking geometric architecture crafted from weathered steel and glass. Floor-to-ceiling windows look out over the active shipping channel and coastal islands. Expansive, open-plan galleries host changing exhibitions of large-scale sculptures, digital installations, and modern paintings. An exterior boardwalk wraps around the water-facing facade, connecting the exhibition wings to outdoor sculpture terraces. The building incorporates solar canopies and seawater cooling systems throughout."
+                    },
+                    new SeedDescription { jsonDescription =
+                        "Perched on a sheer limestone promontory, the remains of this medieval monastery overlook an arid valley basin. Crumbling stone cloisters and roofless chapel walls still showcase intricate Romanesque archways and carved pillar capitals. Hand-cut stone staircases wind down from the sanctuary ruins to secluded hillside prayer caves. Wild cypress trees and aromatic scrub brush grow freely among the weathered flagstones and ancient cisterns. The elevated position affords sweeping 360-degree views across the distant mountain ranges."
+                    },
+                    new SeedDescription { jsonDescription =
+                        "This historic waterfront quarter is defined by rows of converted brick warehouses and reflective canal waterways. Traditional wooden barges and heritage canal boats remain moored along the stone quaysides. Pedestrian bridges with cast-iron railings arch over the waterways, connecting quiet residential lanes to bustling waterside promenades. Former cargo hoists and loading bays remain integrated into the contemporary facade restorations. Tree-lined walkways run parallel to the water, bordered by small courtyards and public squares."
+                    },
+                    new SeedDescription { jsonDescription =
+                        "Covering an expansive wetland delta, this protected coastal reserve encompasses dense mangrove stands and tidal marshlands. A continuous elevated wooden boardwalk traverses the marsh floor, leading to several multi-tiered wildlife viewing platforms. The reserve forms an important migratory corridor for wading birds, nesting waterfowl, and coastal marine life. Saltwater inlets weave through the reeds, feeding into a wide brackish lagoon near the outer shoreline. Interpretive panels along the path describe the sensitive estuarine ecosystem and tidal dynamics."}
+                },
+
                 Addresses = new List<SeedAddress>
                 {
                         new SeedAddress {
@@ -418,9 +414,6 @@ namespace Seido.Utilities.SeedGenerator
                             var _sentence = s.Trim(new char[] { ' ', ',', '.' });
                             return _sentence + '.';
                         }).ToList();
-
-                    _words = new List<string>(_jsonParagraph.Split(" "))
-                        .Select(w => w.Trim(new char[] { ' ', ',', '.' })).ToList();
                 }
             }
             #endregion
@@ -432,15 +425,40 @@ namespace Seido.Utilities.SeedGenerator
             [JsonIgnore]
             public List<string> Sentences => _sentences;
 
-            List<string> _words;
-            [JsonIgnore]
-            public List<string> Words => _words;
         }
+        class SeedDescription
+        {
+            #region Reviews towards json file
+            string _jsonDescription;
+            public string jsonDescription
+            {
+                get => _jsonDescription;
+                set
+                {
+                    _jsonDescription = value;
+                    _descSentences = new List<string>(_jsonDescription.Split(". "))
+                        .Select(s =>
+                        {
+                            var _sentence = s.Trim(new char[] { ' ', ',', '.' });
+                            return _sentence + '.';
+                        }).ToList();
+                }
+            }
+            #endregion
+
+            [JsonIgnore]
+            public string Description => _jsonDescription;
+
+            List<string> _descSentences;
+            [JsonIgnore]
+            public List<string> DescSentences => _descSentences;
+        }
+
         class SeedAddress
         {
             #region Country towards json file
             string _jsonCountry;
-            public string jsonCountry { get => _jsonCountry; set { _jsonCountry = value; }}
+            public string jsonCountry { get => _jsonCountry; set { _jsonCountry = value; } }
             #endregion
 
             [JsonIgnore]
@@ -585,6 +603,7 @@ namespace Seido.Utilities.SeedGenerator
         class SeedJsonContent
         {
             public List<SeedReview> Reviews { get; set; } = new List<SeedReview>();
+            public List<SeedDescription> Descriptions { get; set; } = new List<SeedDescription>();
             public List<SeedAddress> Addresses { get; set; } = new List<SeedAddress>();
             public SeedNames Names { get; set; } = new SeedNames();
             public SeedDomains Domains { get; set; } = new SeedDomains();
@@ -622,19 +641,20 @@ namespace Seido.Utilities.SeedGenerator
                 return Path.Combine(documentPath, name);
             }
 
-            public static bool FileExists(string FileName){
+            public static bool FileExists(string FileName)
+            {
 
                 var fn = Path.GetFileName(FileName);
                 if (fn == FileName)
                 {
                     //no path in FileName use default directory
-                   return File.Exists(fname(FileName));
+                    return File.Exists(fname(FileName));
                 }
-    
+
                 return File.Exists(FileName);
             }
         }
-    #endregion
+        #endregion
     }
 }
 

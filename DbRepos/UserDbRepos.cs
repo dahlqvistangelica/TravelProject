@@ -31,7 +31,8 @@ public class UserDbRepos
         else
         {
             query = _dbContext.Users.AsNoTracking()
-                    .Include(i => i.ReviewsDbM);
+                    .Include(i => i.ReviewsDbM)
+                    .ThenInclude(i => i.AttractionDbM);
         }
         var ret = new ResponsePageDto<IUser>()
         {
@@ -41,14 +42,14 @@ public class UserDbRepos
 
             DbItemsCount = await query
             .Where(i => (i.Seeded == seeded) &&
-                        (i.FirstName.ToLower().Contains(filter)) ||
-                        (i.LastName.ToLower().Contains(filter)) ||
-                        (i.Email.ToLower().Contains(filter))).CountAsync(),
+                        ((i.FirstName.ToLower().Contains(filter)) ||
+                         (i.LastName.ToLower().Contains(filter)) ||
+                         (i.Email.ToLower().Contains(filter)))).CountAsync(),
             PageItems = await query
                         .Where(i => (i.Seeded == seeded) &&
-                        (i.FirstName.ToLower().Contains(filter)) ||
-                        (i.LastName.ToLower().Contains(filter)) ||
-                        (i.Email.ToLower().Contains(filter)))
+                        ((i.FirstName.ToLower().Contains(filter)) ||
+                         (i.LastName.ToLower().Contains(filter)) ||
+                         (i.Email.ToLower().Contains(filter))))
                         
                         .Skip(pageNumber*pageSize)
                         .Take(pageSize)
@@ -62,15 +63,16 @@ public class UserDbRepos
     public async Task<ResponseItemDto<IUser>> ReadUserAsync(Guid id, bool flat)
     {
         IUser item;
-        if(!flat)
+        if(flat)
         {
             item = await _dbContext.Users.AsNoTracking()
-                .Include(i => i.ReviewsDbM)
                 .FirstOrDefaultAsync(i => i.UserId == id);
         }
         else
         {
             item = await _dbContext.Users.AsNoTracking()
+                .Include(i => i.ReviewsDbM)
+                .ThenInclude(i => i.AttractionDbM)
                 .FirstOrDefaultAsync(i => i.UserId == id);
         }
 
@@ -88,7 +90,7 @@ public class UserDbRepos
             Item = item
         };
     }
-    public async Task<ResponseItemDto<IUser>> UpdateUserAsync(UserCUdto itemDto)
+    public async Task<ResponseItemDto<IUser>> UpdateUserAsync(UserCuDto itemDto)
     {
         var query1 = _dbContext.Users
             .Where(i => i.UserId == itemDto.UserId);
@@ -116,7 +118,7 @@ public class UserDbRepos
         return await ReadUserAsync(item.UserId, false);
     }
 
-    public async Task<ResponseItemDto<IUser>> CreateUserAsync(UserCUdto itemDto)
+    public async Task<ResponseItemDto<IUser>> CreateUserAsync(UserCuDto itemDto)
     {
         if(itemDto.UserId != null)
         {
@@ -162,7 +164,7 @@ public class UserDbRepos
         };
     }
 
-    public async Task navProp_UserCUdto_to_UserDbM(UserCUdto itemDtoSrc, UserDbM itemDst)
+    public async Task navProp_UserCUdto_to_UserDbM(UserCuDto itemDtoSrc, UserDbM itemDst)
     {
         List<ReviewDbM> reviews = null;
         if(itemDtoSrc.ReviewsId != null)

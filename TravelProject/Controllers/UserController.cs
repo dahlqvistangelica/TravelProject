@@ -28,7 +28,7 @@ namespace TravelProject.Controllers
       [ActionName("CreateUser")]
       [ProducesResponseType(200, Type = typeof(IUser))]
       [ProducesResponseType(400, Type = typeof(string))]
-      public async Task<IActionResult> CreateUser([FromBody] UserCUdto item)
+      public async Task<IActionResult> CreateUser([FromBody] UserCuDto item)
       {
         try
         {
@@ -46,7 +46,7 @@ namespace TravelProject.Controllers
       [ActionName("UpdateUser")]
       [ProducesResponseType(200, Type = typeof(IUser))]
       [ProducesResponseType(400, Type = typeof(string))]
-      public async Task<IActionResult> UpdateUser(string id, [FromBody] UserCUdto item)
+      public async Task<IActionResult> UpdateUser(string id, [FromBody] UserCuDto item)
       {
         try
         {
@@ -72,7 +72,7 @@ namespace TravelProject.Controllers
       
       [HttpGet()]
       [ActionName("ReadUserDto")]
-      [ProducesResponseType(200, Type = typeof(UserCUdto))]
+      [ProducesResponseType(200, Type = typeof(UserCuDto))]
       [ProducesResponseType(400, Type = typeof(string))]
       [ProducesResponseType(404, Type = typeof(string))]
       public async Task<IActionResult> ReadUserDto(string id = null)
@@ -88,12 +88,12 @@ namespace TravelProject.Controllers
           {
             throw new ArgumentException($"User with id {idArg} not found.");
           }
-          return Ok(new ResponseItemDto<UserCUdto>()
+          return Ok(new ResponseItemDto<UserCuDto>()
           {
             #if DEBUG
             ConnectionString = item.ConnectionString,
             #endif
-            Item = new UserCUdto(item.Item)
+            Item = new UserCuDto(item.Item)
           });
         }
         catch(Exception ex)

@@ -41,16 +41,16 @@ public class AttractionCuDto
   }
 
 
-public class ReviewCUdto
+public class ReviewCuDto
 {
   public Guid? ReviewId {get; set;}
   public Guid UserId {get; set;}
   public Guid AttractionId {get; set;}
   public string Comment {get; set;}
 
-  public ReviewCUdto() {}
+  public ReviewCuDto() {}
 
-  public ReviewCUdto(IReview model)
+  public ReviewCuDto(IReview model)
   {
     ReviewId = model.ReviewId;
     UserId = model.User.UserId;
@@ -67,7 +67,7 @@ public class ReviewCUdto
     }
 }
 
-public class UserCUdto
+public class UserCuDto
 {
   public Guid? UserId {get; set;}
   public string FirstName {get; set;}
@@ -75,9 +75,9 @@ public class UserCUdto
   public string Email {get; set;}
   public List<Guid> ReviewsId {get; set;} = new List<Guid>();
 
-  public UserCUdto() {}
+  public UserCuDto() {}
 
-  public UserCUdto(IUser model)
+  public UserCuDto(IUser model)
   {
     UserId = model.UserId;
     FirstName = model.FirstName;

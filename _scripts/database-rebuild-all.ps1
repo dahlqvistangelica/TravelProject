@@ -10,8 +10,6 @@
 
 # example:
 # .\database-rebuild-all.ps1 sql-travel sqlserver docker root ..\TravelProject
-# .\database-rebuild-all.ps1 sql-travel sqlserver docker dbo ..\AppRazor
-# .\database-rebuild-all.ps1 sql-travel sqlserver docker dbo ..\AppMvc
 
 param(
     [Parameter(Mandatory=$true)]
@@ -36,8 +34,6 @@ param(
 #Set Database Context
 switch ($DatabaseType) {
     "sqlserver" { $DBContext = "SqlServerDbContext" }
-    "mysql" { $DBContext = "mysqlDbContext" }
-    "postgresql" { $DBContext = "PostgresDbContext" }
 }
 
 $AppSettingsFolder = Resolve-Path $AppSettingsFolder

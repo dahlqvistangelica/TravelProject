@@ -120,14 +120,9 @@ public class AttractionDbRepos
         public async Task<ResponseItemDto<IAttraction>> ReadAttractionAsync(Guid id, bool flat)
     {
         IAttraction item;
-        if(!flat)
+        if(flat)
         {
             var query = _dbContext.Attractions.AsNoTracking()
-            .Include(i => i.ReviewsDbM)
-            .ThenInclude(i => i.UserDbM)
-            .Include(i => i.AddressDbM)
-            .ThenInclude(i => i.CityDbM)
-            .Include(i => i.CategoryDbM)
             .Where(i => i.AttractionId == id);
 
             item = await query.FirstOrDefaultAsync<IAttraction>();
@@ -135,6 +130,11 @@ public class AttractionDbRepos
         else
         {
             var query = _dbContext.Attractions.AsNoTracking()
+            .Include(i => i.ReviewsDbM)
+            .ThenInclude(i => i.UserDbM)
+            .Include(i => i.AddressDbM)
+            .ThenInclude(i => i.CityDbM)
+            .Include(i => i.CategoryDbM)
             .Where(i => i.AttractionId == id);
 
             item = await query.FirstOrDefaultAsync<IAttraction>();

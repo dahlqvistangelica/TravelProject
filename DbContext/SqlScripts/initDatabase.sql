@@ -71,8 +71,8 @@ CREATE OR ALTER PROC supusr.spDeleteAll
     SELECT @nrCountriesAffected = COUNT(*) FROM supusr.Countries WHERE Seeded = @seededParam;
 
     DELETE FROM supusr.Reviews WHERE Seeded = @seededParam;
-    DELETE FROM supusr.Addresses WHERE Seeded = @seededParam;
     DELETE FROM supusr.Attractions WHERE Seeded = @seededParam;
+    DELETE FROM supusr.Addresses WHERE Seeded = @seededParam;
     DELETE FROM supusr.Categories WHERE Seeded = @seededParam;
     DELETE FROM supusr.Cities WHERE Seeded = @seededParam;
     DELETE FROM supusr.Countries WHERE Seeded = @seededParam;

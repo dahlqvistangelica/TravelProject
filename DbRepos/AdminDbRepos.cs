@@ -54,7 +54,7 @@ public class AdminDbRepos
         var fn = Path.GetFullPath(_seedSource);
         var seeder = new SeedGenerator(fn);
         
-        var countries = seeder.UniqueItemsToList<CountryDbM>(4);
+        var countries = seeder.UniqueItemsToList<CountryDbM>(5);
         var categories = seeder.UniqueItemsToList<CategoryDbM>(30);
         var attractions = seeder.ItemsToList<AttractionDbM>(1000);
         var users = seeder.ItemsToList<UserDbM>(50);
@@ -67,7 +67,7 @@ public class AdminDbRepos
             country.CitiesDbM = countryCities;
             foreach(var city in countryCities)
             {
-                var cityAddresses = Enumerable.Range(0, 50)
+                var cityAddresses = Enumerable.Range(0, 20)
                     .Select(_ => new AddressDbM
                     {
                         CityDbM = city,

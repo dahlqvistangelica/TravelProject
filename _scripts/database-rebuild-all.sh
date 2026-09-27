@@ -10,8 +10,6 @@
 
 # example:
 # ./database-rebuild-all.sh sql-travel sqlserver docker dbo ../TravelProject
-# ./database-rebuild-all.sh sql-travel sqlserver docker dbo ../AppRazor
-# ./database-rebuild-all.sh sql-travel sqlserver docker dbo ../AppMvc
 
 # Exit immediately if any command fails
 set -e
@@ -78,5 +76,5 @@ export EFC_AppSettingsFolder="$AppSettingsFolder"
 dotnet ef database update -c $DBContext -p ../DbContext -s ../DbContext
 
 #to initialize the database you need to run the sql scripts
-#../DbContext/SqlScripts/<db_type>/initDatabase.sql
+../DbContext/SqlScripts/initDatabase.sql
 

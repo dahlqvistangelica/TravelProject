@@ -52,7 +52,7 @@ namespace TravelProject.Controllers
     [ActionName("CreateReview")]
     [ProducesResponseType(200, Type = typeof(IReview))]
     [ProducesResponseType(400, Type = typeof(string))]
-    public async Task<IActionResult> CreateReview([FromBody] ReviewCUdto itemDto)
+    public async Task<IActionResult> CreateReview([FromBody] ReviewCuDto itemDto)
     {
       try
       {

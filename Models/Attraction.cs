@@ -31,7 +31,7 @@ public class Attraction : IAttraction, ISeed<Attraction>
     Seeded = true;
     AttractionId = Guid.NewGuid();
     Name = $"{seeder.AttractionFirstName} {seeder.AttractionSecondName}";
-    Description = seeder.Comment;
+    Description = seeder.DescSentence;
     return this;
   }
 

@@ -51,7 +51,7 @@ public class ReviewDbRepos
             Item = item
         };
     }
-    public async Task<ResponseItemDto<IReview>> CreateReviewAsync(ReviewCUdto itemDto)
+    public async Task<ResponseItemDto<IReview>> CreateReviewAsync(ReviewCuDto itemDto)
     {
         if(itemDto.ReviewId != null)
         {
@@ -97,7 +97,7 @@ public class ReviewDbRepos
         };
     }
 
-    public async Task navProp_ReviewCUdto_to_ReviewDbM(ReviewCUdto itemDtoSrc, ReviewDbM itemDst)
+    public async Task navProp_ReviewCUdto_to_ReviewDbM(ReviewCuDto itemDtoSrc, ReviewDbM itemDst)
     {
         var user = await _dbContext.Users.FirstOrDefaultAsync(
             u => (u.UserId == itemDtoSrc.UserId));

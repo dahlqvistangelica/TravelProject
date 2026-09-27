@@ -22,13 +22,13 @@ public interface IUserService
 {
   public Task<ResponsePageDto<IUser>> ReadUsersAsync(bool seeded, bool flat, string filter, int pageNumber, int pageSize);
   public Task<ResponseItemDto<IUser>> ReadUserAsync(Guid id, bool flat);
-  public Task<ResponseItemDto<IUser>> CreateUserAsync(UserCUdto itemDto);
-  public Task<ResponseItemDto<IUser>> UpdateUserAsync(UserCUdto itemDto);
+  public Task<ResponseItemDto<IUser>> CreateUserAsync(UserCuDto itemDto);
+  public Task<ResponseItemDto<IUser>> UpdateUserAsync(UserCuDto itemDto);
   public Task<ResponseItemDto<IUser>> DeleteUserAsync(Guid id);
 }
 public interface IReviewService
 {
   public Task<ResponseItemDto<IReview>> ReadReviewAsync(Guid id, bool flat);
-  public Task<ResponseItemDto<IReview>> CreateReviewAsync(ReviewCUdto itemDto);
+  public Task<ResponseItemDto<IReview>> CreateReviewAsync(ReviewCuDto itemDto);
   public Task<ResponseItemDto<IReview>> DeleteReviewAsync(Guid id);
 }

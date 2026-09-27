@@ -227,7 +227,7 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.Property<int>("NrAttractions")
                         .HasColumnType("int");
 
-                    b.Property<int>("NrAttractionssWithAddress")
+                    b.Property<int>("NrAttractionsWithAddress")
                         .HasColumnType("int");
 
                     b.Property<int>("NrCities")

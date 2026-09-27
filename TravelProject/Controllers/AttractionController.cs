@@ -206,5 +206,22 @@ namespace TravelProject.Controllers;
       return BadRequest(ex.Message);
     }
   }
+  [HttpPost()]
+  [ActionName("CreateAttraction")]
+  [ProducesResponseType(200, Type = typeof(IAttraction))]
+  [ProducesResponseType(400, Type = typeof(string))]
+  public async Task<IActionResult> CreateAttraction([FromBody] AttractionCuDto item)
+  {
+    try
+    {
+      var resp = await _service.CreateAttractionAsync(item);
+      return Ok(resp);
+    }
+    catch(Exception ex)
+    {
+      _logger.LogError($"{nameof(CreateAttraction)}: {ex.Message}");
+          return BadRequest(ex.Message);
+    }
+  }
 }
 
