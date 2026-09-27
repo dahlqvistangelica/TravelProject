@@ -54,6 +54,7 @@ public interface ICountry
 public interface IAddress
 {
   public Guid AddressId {get; set;}
+  public Guid? AttractionId { get; }
   public string Street {get; set;}
   public int ZipCode {get; set;}
   public ICity City {get; set;}

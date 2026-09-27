@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DbContext.Migrations.SqlServerDbContext
 {
     [DbContext(typeof(MainDbContext.SqlServerDbContext))]
-    [Migration("20260927131618_miInitial")]
+    [Migration("20260927140014_miInitial")]
     partial class miInitial
     {
         /// <inheritdoc />
@@ -57,7 +57,7 @@ namespace DbContext.Migrations.SqlServerDbContext
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("AddressId")
+                    b.Property<Guid>("AddressId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("CategoryId")
@@ -76,8 +76,7 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.HasKey("AttractionId");
 
                     b.HasIndex("AddressId")
-                        .IsUnique()
-                        .HasFilter("[AddressId] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("CategoryId");
 
@@ -302,7 +301,9 @@ namespace DbContext.Migrations.SqlServerDbContext
                 {
                     b.HasOne("DbModels.AddressDbM", "AddressDbM")
                         .WithOne("AttractionDbM")
-                        .HasForeignKey("DbModels.AttractionDbM", "AddressId");
+                        .HasForeignKey("DbModels.AttractionDbM", "AddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DbModels.CategoryDbM", "CategoryDbM")
                         .WithMany("AttractionsDbM")

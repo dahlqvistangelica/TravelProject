@@ -6,6 +6,7 @@ namespace Models;
 public class Address : IAddress, ISeed<Address>, IEquatable<Address>
 {
   public virtual Guid AddressId {get; set;}
+  public virtual Guid? AttractionId => Attraction?.AttractionId;
   public virtual string Street {get; set;}
   public virtual int ZipCode {get; set;}
   public virtual ICity City {get; set;}

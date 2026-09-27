@@ -45,60 +45,77 @@ public class AdminDbRepos
         };
     }
 
-   public async Task<ResponseItemDto<GstUsrInfoAllDto>> RobustSeedingAsync()
+  public async Task<ResponseItemDto<GstUsrInfoAllDto>> RobustSeedingAsync()
+{
+    // Remove all seeded data first, then seed again
+    await RemoveSeedAsync(true);
+
+    // Create a new seed generator and generate the data
+    var fn = Path.GetFullPath(_seedSource);
+    var seeder = new SeedGenerator(fn);
+    
+    var countries = seeder.UniqueItemsToList<CountryDbM>(5);
+    var categories = seeder.UniqueItemsToList<CategoryDbM>(30);
+    var users = seeder.ItemsToList<UserDbM>(50);
+    var addresses = new List<AddressDbM>();
+
+    foreach (var country in countries)
     {
-        //Remove all seeded data first, then seed again
-        await RemoveSeedAsync(true);
+        var countryCities = Enumerable.Range(0, 25)
+            .Select(_ => new CityDbM { CountryDbM = country }.Seed(seeder))
+            .ToList();
 
-        //Create a new seed generator and generate the data
-        var fn = Path.GetFullPath(_seedSource);
-        var seeder = new SeedGenerator(fn);
-        
-        var countries = seeder.UniqueItemsToList<CountryDbM>(5);
-        var categories = seeder.UniqueItemsToList<CategoryDbM>(30);
-        var attractions = seeder.ItemsToList<AttractionDbM>(1000);
-        var users = seeder.ItemsToList<UserDbM>(50);
-        var addresses = new List<AddressDbM>();
-        foreach(var country in countries)
+        country.CitiesDbM = countryCities;
+
+        foreach (var city in countryCities)
         {
-            var countryCities = Enumerable.Range(0, 25)
-                .Select(_ => new CityDbM { CountryDbM = country }.Seed(seeder))
+            var cityAddresses = Enumerable.Range(0, 20)
+                .Select(_ => new AddressDbM
+                {
+                    CityDbM = city,
+                }.Seed(seeder))
                 .ToList();
-            country.CitiesDbM = countryCities;
-            foreach(var city in countryCities)
-            {
-                var cityAddresses = Enumerable.Range(0, 20)
-                    .Select(_ => new AddressDbM
-                    {
-                        CityDbM = city,
-                    }.Seed(seeder))
-                    .ToList();
-                city.AddressesDbM = cityAddresses;
-                addresses.AddRange(cityAddresses);
-            }
-        }
-        foreach(var attraction in attractions)
-        {
-            attraction.CategoryDbM = seeder.FromList(categories);
-            attraction.AddressDbM = seeder.FromList(addresses);
-            attraction.ReviewsDbM = seeder.ItemsToList<ReviewDbM>(seeder.Next(0, 21));
-            foreach(var review in attraction.ReviewsDbM)
-            {
-                review.UserDbM = seeder.FromList(users);
-                review.AttractionDbM = attraction;
-            }
-        }
 
-        _dbContext.Countries.AddRange(countries);
-        _dbContext.Cities.AddRange(countries.SelectMany(country => country.CitiesDbM));
-        _dbContext.Addresses.AddRange(addresses);
-        _dbContext.Categories.AddRange(categories);
-        _dbContext.Users.AddRange(users);
-        _dbContext.Attractions.AddRange(attractions);
-        
-        await _dbContext.SaveChangesAsync();
-        return await DbInfoAsync();
+            city.AddressesDbM = cityAddresses;
+            addresses.AddRange(cityAddresses);
+        }
     }
+
+    // Shuffle addresses to randomize assignment without duplicates
+    var availableAddresses = addresses.OrderBy(_ => seeder.Next()).ToList();
+
+    // Ensure we do not request more attractions than there are available addresses
+    int attractionCount = Math.Min(1000, availableAddresses.Count);
+    var attractions = seeder.ItemsToList<AttractionDbM>(attractionCount);
+
+    for (int i = 0; i < attractionCount; i++)
+    {
+        var attraction = attractions[i];
+        var address = availableAddresses[i];
+
+        attraction.CategoryDbM = seeder.FromList(categories);
+
+        // Assign the 1-to-1 relationship bidirectionally in memory
+        attraction.AddressDbM = address;
+        address.AttractionDbM = attraction;
+
+        attraction.ReviewsDbM = seeder.ItemsToList<ReviewDbM>(seeder.Next(0, 21));
+        foreach (var review in attraction.ReviewsDbM)
+        {
+            review.UserDbM = seeder.FromList(users);
+            review.AttractionDbM = attraction;
+        }
+    }
+
+    // Add root graphs to EF Core ChangeTracker
+    _dbContext.Countries.AddRange(countries);
+    _dbContext.Categories.AddRange(categories);
+    _dbContext.Users.AddRange(users);
+    _dbContext.Attractions.AddRange(attractions);
+    
+    await _dbContext.SaveChangesAsync();
+    return await DbInfoAsync();
+}
 
     public async Task<ResponseItemDto<GstUsrInfoAllDto>> RemoveSeedAsync(bool seeded)
     {

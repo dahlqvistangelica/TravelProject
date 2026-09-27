@@ -112,7 +112,7 @@ namespace DbContext.Migrations.SqlServerDbContext
                     Name = table.Column<string>(type: "varchar(200)", nullable: false),
                     CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Description = table.Column<string>(type: "varchar(200)", nullable: true),
-                    AddressId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    AddressId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Seeded = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -123,7 +123,8 @@ namespace DbContext.Migrations.SqlServerDbContext
                         column: x => x.AddressId,
                         principalSchema: "supusr",
                         principalTable: "Addresses",
-                        principalColumn: "AddressId");
+                        principalColumn: "AddressId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Attractions_Categories_CategoryId",
                         column: x => x.CategoryId,
@@ -173,8 +174,7 @@ namespace DbContext.Migrations.SqlServerDbContext
                 schema: "supusr",
                 table: "Attractions",
                 column: "AddressId",
-                unique: true,
-                filter: "[AddressId] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Attractions_CategoryId",

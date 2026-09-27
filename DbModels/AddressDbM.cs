@@ -34,7 +34,7 @@ public class AddressDbM : Address, ISeed<AddressDbM>, IEquatable<AddressDbM>
   [NotMapped]
   public override IAttraction Attraction { get => AttractionDbM; set => throw new NotImplementedException(); }
   [JsonIgnore]
-  [InverseProperty(nameof(AttractionDbM.AddressDbM))]
+  [InverseProperty("AddressDbM")]
   public AttractionDbM AttractionDbM { get; set; } = null;
 
   public override AddressDbM Seed(SeedGenerator seeder)

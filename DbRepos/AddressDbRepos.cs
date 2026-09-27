@@ -25,7 +25,7 @@ public class AddressDbRepos
         IQueryable<AddressDbM> query;
         if(flat)
         {
-            query = _dbContext.Addresses.AsNoTracking();
+            query = _dbContext.Addresses.AsNoTracking().Include(i => i.AttractionId);
         }
         else
         {
